@@ -4,7 +4,6 @@ import com.example.backend.model.NBAPlayer;
 import com.example.backend.repository.NBAPlayerRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -13,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +68,7 @@ public class NBAPlayerService {
                 }
             }
             playerRepository.saveAll(nbaPlayers); // Save players to the repository
+            fetchAndStoreSeasonAverages(nbaPlayers); //Gets the player averages for the newly updated list of ActiveNBAPlayers
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,79 +76,52 @@ public class NBAPlayerService {
         return nbaPlayers;
     }
 
-//    public void fetchAndStorePlayerAverages(Long playerId) {
-//        String url = "https://api.balldontlie.io/v1/season_averages?season=2023&player_ids[]=" + playerId;
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", apiKey);
-//        HttpEntity<String> entity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<AveragesResponse> response = restTemplate.exchange(url, HttpMethod.GET, entity, AveragesResponse.class);
-//        List<SeasonAverage> averages = response.getBody().getData();
-//
-//        if (!averages.isEmpty()) {
-//            SeasonAverage avg = averages.get(0);
-//            NBAPlayer player = playerRepository.findById(playerId).orElseThrow();
-//            player.setPointsPerGame(avg.getPts());
-//            player.setAssistsPerGame(avg.getAst());
-//            player.setTurnoversPerGame(avg.getTurnover());
-//            player.setFieldGoalsAttempted(avg.getFga());
-//            player.setFieldGoalsMade(avg.getFgm());
-//            player.setFreeThrowsAttempted(avg.getFta());
-//            player.setFreeThrowsMade(avg.getFtm());
-//            player.setThreePointsAttempted(avg.getFg3a());
-//            player.setThreePointsMade(avg.getFg3m());
-//            player.setRebounds(avg.getReb());
-//            player.setStealsPerGame(avg.getStl());
-//            player.setBlocksPerGame(avg.getBlk());
-//            player.setFieldGoalPercentage(avg.getFgPct());
-//            player.setThreePointPercentage(avg.getFg3Pct());
-//            player.setFreeThrowPercentage(avg.getFtPct());
-//            player.setMinutesPerGame(avg.getMin());
-//            player.setGamesPlayed(avg.getGamesPlayed());
-//            player.setSeason(avg.getSeason());
-//
-//            playerRepository.save(player);
-//        }
-//    }
+    private void fetchAndStoreSeasonAverages(List<NBAPlayer> nbaPlayers) {
+        String url = "https://api.balldontlie.io/v1/season_averages";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", apiKey);
+        ObjectMapper mapper = new ObjectMapper();
+        for (NBAPlayer player : nbaPlayers) {
+            try {
+                String playerIDUrl = String.format("%s?season=2023&player_ids[]=%d", url, player.getId());
+                System.out.println("Request URL: " + playerIDUrl); // Print the request URL to debug
+                HttpEntity<String> entity = new HttpEntity<>(headers);
+                ResponseEntity<String> response = restTemplate.exchange(playerIDUrl, HttpMethod.GET, entity, String.class);
+                JsonNode root = mapper.readTree(response.getBody());
+                JsonNode data = root.path("data");
+
+                // Print the raw response body
+                String responseBody = response.getBody();
+                System.out.println("Raw Response Body: " + responseBody);
+
+                if(data.isArray()  && !data.isEmpty()){
+                    for(JsonNode dataArray : data){
+                        player.setPointsPerGame(dataArray.path("pts").asDouble());
+                        player.setAssistsPerGame(dataArray.path("ast").asDouble());
+                        player.setTurnoversPerGame(dataArray.path("turnover").asDouble());
+                        player.setFieldGoalsAttempted(dataArray.path("fga").asDouble());
+                        player.setFieldGoalsMade(dataArray.path("fgm").asDouble());
+                        player.setFreeThrowsAttempted(dataArray.path("fta").asDouble());
+                        player.setFreeThrowsMade(dataArray.path("ftm").asDouble());
+                        player.setThreePointsAttempted(dataArray.path("fg3a").asDouble());
+                        player.setThreePointsMade(dataArray.path("fg3m").asDouble());
+                        player.setRebounds(dataArray.path("reb").asDouble());
+                        player.setStealsPerGame(dataArray.path("stl").asDouble());
+                        player.setBlocksPerGame(dataArray.path("blk").asDouble());
+                        player.setFieldGoalPercentage(dataArray.path("fg_pct").asDouble());
+                        player.setThreePointPercentage(dataArray.path("fg3_pct").asDouble());
+                        player.setFreeThrowPercentage(dataArray.path("ft_pct").asDouble());
+                        player.setMinutesPerGame(dataArray.path("min").asText());
+                        player.setGamesPlayed(dataArray.path("games_played").asInt());
+                        player.setSeason(dataArray.path("season").asInt());
+
+                        playerRepository.save(player); // Save updated player to the repository
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
-
-//@Data
-//class PlayersResponse {
-//    private List<NBAPlayer> data;
-//    private Meta meta;
-//
-//    @Data
-//    public static class Meta {
-//        private Integer nextCursor;
-//        private Integer perPage;
-//    }
-//}
-
-//@Data
-//class AveragesResponse {
-//    private List<SeasonAverage> data;
-//}
-
-//@Data
-//class SeasonAverage {
-//    private double pts;
-//    private double ast;
-//    private double turnover;
-//    private double fga;
-//    private double fgm;
-//    private double fta;
-//    private double ftm;
-//    private double fg3a;
-//    private double fg3m;
-//    private double reb;
-//    private double stl;
-//    private double blk;
-//    private double fgPct;
-//    private double fg3Pct;
-//    private double ftPct;
-//    private String min;
-//    private int gamesPlayed;
-//    private int playerId;
-//    private int season;
-//}
 
