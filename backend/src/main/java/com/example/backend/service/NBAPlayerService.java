@@ -28,6 +28,10 @@ public class NBAPlayerService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    public List<NBAPlayer> getAllPlayers() {
+        return playerRepository.findAll();
+    }
+
     public List<NBAPlayer> fetchAndStoreActivePlayers() {
         String url = "https://api.balldontlie.io/v1/players/active";
         HttpHeaders headers = new HttpHeaders();

@@ -12,23 +12,23 @@ public class NBAPlayer {
     private String teamAbbreviation;
     private String position;
     private double pointsPerGame;
-    private double assistsPerGame;
-    private double turnoversPerGame;
-    private double fieldGoalsAttempted;
-    private double fieldGoalsMade;
-    private double freeThrowsAttempted;
-    private double freeThrowsMade;
-    private double threePointsAttempted;
     private double threePointsMade;
     private double rebounds;
+    private double assistsPerGame;
     private double stealsPerGame;
     private double blocksPerGame;
     private double fieldGoalPercentage;
-    private double threePointPercentage;
+    private double fieldGoalsMade;
+    private double fieldGoalsAttempted;
     private double freeThrowPercentage;
+    private double freeThrowsMade;
+    private double freeThrowsAttempted;
+    private double turnoversPerGame;
     private String minutesPerGame;
     private int gamesPlayed;
     private int season;
+    private double threePointPercentage;
+    private double threePointsAttempted;
 
     // Default constructor
     public NBAPlayer() {

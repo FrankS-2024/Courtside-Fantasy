@@ -1,4 +1,5 @@
 package com.example.backend.controller;
+import com.example.backend.model.NBAPlayer;
 import com.example.backend.repository.NBAPlayerRepository;
 import com.example.backend.service.NBAPlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,5 +21,11 @@ public class NBAPlayerController {
     public ResponseEntity<String> fetchPlayers() {
         playerService.fetchAndStoreActivePlayers();
         return ResponseEntity.ok("Players fetched and stored successfully");
+    }
+
+    @GetMapping("/get-players")
+    public ResponseEntity<List<NBAPlayer>> getPlayers() {
+        List<NBAPlayer> players = playerService.getAllPlayers();
+        return ResponseEntity.ok(players);
     }
 }
