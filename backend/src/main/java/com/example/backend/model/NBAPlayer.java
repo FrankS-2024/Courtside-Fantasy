@@ -29,6 +29,7 @@ public class NBAPlayer {
     private int season;
     private double threePointPercentage;
     private double threePointsAttempted;
+    private String playerImg;
 
     // Default constructor
     public NBAPlayer() {
@@ -217,5 +218,13 @@ public class NBAPlayer {
 
     public void setSeason(int season) {
         this.season = season;
+    }
+
+    public String getPlayerImg() {
+        return playerImg;
+    }
+
+    public void setPlayerImg(String playerImg) {
+        this.playerImg = playerImg;
     }
 }

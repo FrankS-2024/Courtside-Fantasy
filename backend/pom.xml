@@ -55,6 +55,11 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-gateway-mvc</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.5.2</version>
+		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>org.thymeleaf.extras</groupId>-->
 <!--			<artifactId>thymeleaf-extras-springsecurity6</artifactId>-->

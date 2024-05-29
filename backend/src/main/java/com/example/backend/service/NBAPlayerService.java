@@ -1,6 +1,9 @@
 package com.example.backend.service;
 
 import com.example.backend.model.NBAPlayer;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+import org.springframework.core.io.ClassPathResource;
 import com.example.backend.repository.NBAPlayerRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,8 +17,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NBAPlayerService {
@@ -25,6 +32,8 @@ public class NBAPlayerService {
 
     @Autowired
     private NBAPlayerRepository playerRepository;
+    private static final String CSV_FILE_PATH = "NBA_Player_IDs.csv";
+    private static final String IMAGE_URL_PREFIX = "https://cdn.nba.com/headshots/nba/latest/1040x760/";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -32,12 +41,23 @@ public class NBAPlayerService {
         return playerRepository.findAll();
     }
 
-    public List<NBAPlayer> fetchAndStoreActivePlayers() {
+    public List<NBAPlayer> fetchAndStoreActivePlayers() throws IOException, CsvException {
         String url = "https://api.balldontlie.io/v1/players/active";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", apiKey);
         List<NBAPlayer> nbaPlayers = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
+
+        CSVReader csvReader = new CSVReader(new InputStreamReader(new ClassPathResource(CSV_FILE_PATH).getInputStream()));
+        List<String[]> records = csvReader.readAll();
+        Map<String, String> playerIds = new HashMap<>();
+
+        for (String[] record : records) {
+            String playerName = record[0];
+            String playerId = record[1];
+            playerIds.put(playerName, playerId);
+        }
+
         try {
             String nextCursor = null;
             boolean moreResults = true;
@@ -59,6 +79,18 @@ public class NBAPlayerService {
                         player.setPosition(playerNode.path("position").asText());
                         player.setTeamAbbreviation(playerNode.path("team").path("abbreviation").asText());
 
+                        if(playerIds.containsKey(playerNode.path("first_name").asText() + " " + playerNode.path("last_name").asText())){
+                            String playerId = playerIds.get(playerNode.path("first_name").asText() + " " + playerNode.path("last_name").asText());
+                            if(playerId.startsWith("http")){
+                                player.setPlayerImg(playerId);
+                            }else{
+                                String playerImg = IMAGE_URL_PREFIX + playerId + ".png";
+                                player.setPlayerImg(playerImg);
+                            }
+                        }
+                        else{
+                            player.setPlayerImg("N/A");
+                        }
                         nbaPlayers.add(player);
                     }
 
@@ -80,11 +112,12 @@ public class NBAPlayerService {
         return nbaPlayers;
     }
 
-    private void fetchAndStoreSeasonAverages(List<NBAPlayer> nbaPlayers) {
+    private void fetchAndStoreSeasonAverages(List<NBAPlayer> nbaPlayers) throws IOException, CsvException {
         String url = "https://api.balldontlie.io/v1/season_averages";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", apiKey);
         ObjectMapper mapper = new ObjectMapper();
+
         for (NBAPlayer player : nbaPlayers) {
             try {
                 String playerIDUrl = String.format("%s?season=2023&player_ids[]=%d", url, player.getId());
@@ -118,7 +151,6 @@ public class NBAPlayerService {
                         player.setMinutesPerGame(dataArray.path("min").asText());
                         player.setGamesPlayed(dataArray.path("games_played").asInt());
                         player.setSeason(dataArray.path("season").asInt());
-
                         playerRepository.save(player); // Save updated player to the repository
                     }
                 }
