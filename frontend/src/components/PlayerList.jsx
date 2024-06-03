@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import PlayerDetail from './PlayerDetail';
 import './PlayerList.css';
 
@@ -28,7 +29,10 @@ const PlayerList = () => {
 
     return (
         <div className="player-list">
-            <h1>NBA Player Statistics for 2023-24 Season</h1>
+            <header className="player-list-header">
+                <h1>NBA Player Statistics for 2023-24 Season</h1>
+                <Link to="/" className="bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded transition-transform duration-300 transform hover:scale-105">Back to Home</Link>
+            </header>
             {selectedPlayer && <PlayerDetail player={selectedPlayer} />}
             <table>
                 <thead>
