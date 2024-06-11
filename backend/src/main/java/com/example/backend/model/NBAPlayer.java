@@ -30,6 +30,7 @@ public class NBAPlayer {
     private double threePointPercentage;
     private double threePointsAttempted;
     private String playerImg;
+    private double rankingScore;
 
     // Default constructor
     public NBAPlayer() {
@@ -226,5 +227,13 @@ public class NBAPlayer {
 
     public void setPlayerImg(String playerImg) {
         this.playerImg = playerImg;
+    }
+
+    public double getRankingScore() {
+        return rankingScore;
+    }
+
+    public void setRankingScore(double rankingScore) {
+        this.rankingScore = rankingScore;
     }
 }

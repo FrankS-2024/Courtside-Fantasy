@@ -15,7 +15,7 @@ const LandingPage = () => {
                     {/* Header */}
                     <header className="h-24">
                         <div className="container mx-auto flex justify-between items-center h-full">
-                            <h1 className="text-3xl text-white font-bold">CourtSide Fantasy</h1>
+                            <h1 className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold">CourtSide Fantasy</h1>
                             <nav>
                                 <a href="#features" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">Features</a>
                                 <a href="#about" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">About</a>
@@ -27,11 +27,11 @@ const LandingPage = () => {
                     </header>
 
                     {/* Hero Section */}
-                    <section className="text-left h-screen flex items-center bg-cover bg-center">
-                        <div className="container mx-auto pl-12">
+                    <section className="text-left h-screen flex items-center bg-cover bg-center pr-16 pb-14">
+                        <div className="container mx-auto ">
                             <div className="max-w-lg">
                                 <h2 className="text-5xl text-white font-bold mb-4 fade-in">Dominate Your Fantasy Basketball League</h2>
-                                <p className="text-xl text-white mb-8 fade-in">With advanced analytics and powerful tools from CourtSide Fantasy</p>
+                                <p className="text-xl text-neutral-500 mb-6 fade-in">With advanced analytics and powerful tools from CourtSide Fantasy</p>
                                 <a href="#features" className="bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">
                                     Learn More
                                 </a>
@@ -53,7 +53,7 @@ const LandingPage = () => {
                             best team
                          </span>
                     </h3>
-                    <div className="flex flex-wrap mt-10 lg:mt-20 justify-center">
+                    <div className="flex flex-wrap mt-10 lg:mt-20 justify-center pr-4">
                         <div className="w-full sm:w-1/2 lg:w-1/3 mb-6">
                             <div className="flex">
                                 <div
@@ -157,7 +157,7 @@ const LandingPage = () => {
                             league.
                         </p>
                         <button
-                            className="bg-orange-600 text-white py-2 px-4 rounded-full hover:bg-orange-700 transition duration-300">
+                            className="bg-orange-600 text-white py-2 px-4 rounded-full hover:bg-orange-700 font-bold transition duration-300">
                             Get Started
                         </button>
                     </div>
