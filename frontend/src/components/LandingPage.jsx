@@ -12,7 +12,7 @@ const LandingPage = () => {
                     {/* Header */}
                     <header className="h-24">
                         <div className="container mx-auto flex justify-between items-center h-full">
-                            <h1 className="text-3xl text-white font-bold">CourtSide Fantasy</h1>
+                            <h1 className="text-3xl text-white font-bold">Courtside Fantasy</h1>
                             <nav>
                                 <a href="#features" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">Features</a>
                                 <a href="#about" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">About</a>
@@ -28,7 +28,7 @@ const LandingPage = () => {
                         <div className="container mx-auto pl-12">
                             <div className="max-w-lg">
                                 <h2 className="text-5xl text-white font-bold mb-4 fade-in">Dominate Your Fantasy Basketball League</h2>
-                                <p className="text-xl text-white mb-8 fade-in">With advanced analytics and powerful tools from CourtSide Fantasy</p>
+                                <p className="text-xl text-white mb-8 fade-in">With advanced analytics and powerful tools from Courtside Fantasy</p>
                                 <a href="#features" className="bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">
                                     Learn More
                                 </a>
@@ -63,7 +63,7 @@ const LandingPage = () => {
             <section id="about" className="py-20 bg-gray-950 text-white">
                 <div className="container mx-auto text-center">
                     <h3 className="text-4xl font-bold mb-8">About Us</h3>
-                    <p className="text-xl max-w-3xl mx-auto">CourtSide Fantasy is dedicated to helping fantasy basketball enthusiasts dominate their leagues with advanced tools and analytics. Our algorithms are designed to provide you with the best insights to make informed decisions and achieve victory.</p>
+                    <p className="text-xl max-w-3xl mx-auto">Courtside Fantasy is dedicated to helping fantasy basketball enthusiasts dominate their leagues with advanced tools and analytics. Our algorithms are designed to provide you with the best insights to make informed decisions and achieve victory.</p>
                 </div>
             </section>
 

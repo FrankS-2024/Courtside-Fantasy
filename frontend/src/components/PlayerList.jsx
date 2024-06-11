@@ -30,7 +30,7 @@ const PlayerList = () => {
         <div className="min-h-screen bg-neutral-900 text-white">
             <header className="h-24 bg-neutral-900">
                 <div className="container mx-auto flex justify-between items-center h-full">
-                    <h1 className="text-3xl text-white font-bold">CourtSide Fantasy</h1>
+                    <h1 className="text-3xl text-white font-bold">Courtside Fantasy</h1>
                     <nav>
                         <a href="#login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</a>
                         <Link to="/" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Home</Link>
