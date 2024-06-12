@@ -8,12 +8,23 @@ const PlayerList = () => {
     const [selectedPlayer, setSelectedPlayer] = useState(null);
 
     useEffect(() => {
-        axios.get('/api/get-players')
-            .then(response => {
-                setPlayers(response.data);
+        // First, call the rank-players API to ensure the rankings are calculated
+        axios.get('/api/rank-players')
+            .then(() => {
+                // Then, fetch the players
+                axios.get('/api/get-players')
+                    .then(response => {
+                        const playersWithScores = response.data.filter(player => player.rankingScore !== undefined);
+                        // Sort players by ranking score in descending order
+                        const sortedPlayers = playersWithScores.sort((a, b) => b.rankingScore - a.rankingScore);
+                        setPlayers(sortedPlayers);
+                    })
+                    .catch(error => {
+                        console.error("There was an error fetching the player data!", error);
+                    });
             })
             .catch(error => {
-                console.error("There was an error fetching the player data!", error);
+                console.error("There was an error ranking the players!", error);
             });
     }, []);
 
@@ -44,26 +55,27 @@ const PlayerList = () => {
                 {selectedPlayer && <PlayerDetail player={selectedPlayer} />}
                 <table className="w-5/6 border-collapse mb-5">
                     <colgroup>
-                        {/*Name*/<col style={{width: '14%'}}/>}
-                        </*Team*/col style={{width: '5%'}}/>
-                        </*Position*/col style={{width: '5%'}}/>
-                        </*Games Played*/col style={{width: '5%'}}/>
-                        </*Minutes*/col style={{width: '5%'}}/>
-                        </*Points*/col style={{width: '6%'}}/>
-                        </*Threes*/col style={{width: '6%'}}/>
-                        </*Rebounds*/col style={{width: '6%'}}/>
-                        </*Assists*/col style={{width: '6%'}}/>
-                        </*Steals*/col style={{width: '6%'}}/>
-                        </*Blocks*/col style={{width: '6%'}}/>
-                        </*Field Goal %*/col style={{width: '6%'}}/>
-                        </*Field Goal Attempts*/col style={{width: '6%'}}/>
-                        </*Free Throw %*/col style={{width: '6%'}}/>
-                        </*Free Throw Attempts*/col style={{width: '6%'}}/>
-                        </*Turnovers*/col style={{width: '6%'}}/>
+                        <col style={{ width: '14%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '5%' }} />
+                        <col style={{ width: '5%' }} />
+                        <col style={{ width: '5%' }} />
+                        <col style={{ width: '5%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
+                        <col style={{ width: '6%' }} />
                     </colgroup>
                     <thead>
                     <tr>
-                        {['Name', 'Team', 'Position', 'Games Played', 'Minutes', 'Points', 'Threes', 'Rebounds',
+                        {['Name', 'Ranking Score', 'Team', 'Position', 'Games Played', 'Minutes', 'Points', 'Threes', 'Rebounds',
                             'Assists', 'Steals', 'Blocks', 'Field Goal %', 'Field Goal Attempts', 'Free Throw %',
                             'Free Throw Attempts', 'Turnovers'].map((header) => (
                             <th key={header}
@@ -76,6 +88,7 @@ const PlayerList = () => {
                         <tr key={player.id} onClick={() => handlePlayerClick(player)}
                             className="hover:bg-neutral-600 cursor-pointer">
                             <td className="p-2 border text-center">{player.firstName} {player.lastName}</td>
+                            <td className="p-2 border text-center">{player.rankingScore.toFixed(2)}</td>
                             <td className="p-2 border text-center">{player.teamAbbreviation}</td>
                             <td className="p-2 border text-center">{player.position}</td>
                             <td className="p-2 border text-center">{player.gamesPlayed}</td>
@@ -101,3 +114,5 @@ const PlayerList = () => {
 };
 
 export default PlayerList;
+
+

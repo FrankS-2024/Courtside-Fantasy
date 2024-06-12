@@ -30,4 +30,10 @@ public class NBAPlayerController {
         List<NBAPlayer> players = playerService.getAllPlayers();
         return ResponseEntity.ok(players);
     }
+
+    @GetMapping("/rank-players")
+    public ResponseEntity<String> rankPlayers() {
+        playerService.calculatePlayerRankings();
+        return ResponseEntity.ok("Players ranked successfully");
+    }
 }
