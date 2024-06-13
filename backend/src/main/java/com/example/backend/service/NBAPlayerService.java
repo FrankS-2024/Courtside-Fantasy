@@ -169,54 +169,62 @@ public class NBAPlayerService {
             return;
         }
 
-        // Calculate means and standard deviations
+        // Calculate means, standard deviations, and root-mean-square deviations
         double meanPoints = calculateMean(players.stream().mapToDouble(NBAPlayer::getPointsPerGame).toArray());
         double stdDevPoints = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getPointsPerGame).toArray(), meanPoints);
+        double rmsDevPoints = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getPointsPerGame).toArray());
 
         double meanRebounds = calculateMean(players.stream().mapToDouble(NBAPlayer::getRebounds).toArray());
         double stdDevRebounds = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getRebounds).toArray(), meanRebounds);
+        double rmsDevRebounds = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getRebounds).toArray());
 
         double meanAssists = calculateMean(players.stream().mapToDouble(NBAPlayer::getAssistsPerGame).toArray());
         double stdDevAssists = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getAssistsPerGame).toArray(), meanAssists);
+        double rmsDevAssists = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getAssistsPerGame).toArray());
 
         double meanThreePointsMade = calculateMean(players.stream().mapToDouble(NBAPlayer::getThreePointsMade).toArray());
         double stdDevThreePointsMade = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getThreePointsMade).toArray(), meanThreePointsMade);
+        double rmsDevThreePointsMade = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getThreePointsMade).toArray());
 
         double meanFieldGoalPercentage = calculateMean(players.stream().mapToDouble(NBAPlayer::getFieldGoalPercentage).toArray());
         double stdDevFieldGoalPercentage = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getFieldGoalPercentage).toArray(), meanFieldGoalPercentage);
+        double rmsDevFieldGoalPercentage = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getFieldGoalPercentage).toArray());
 
         double meanTurnovers = calculateMean(players.stream().mapToDouble(NBAPlayer::getTurnoversPerGame).toArray());
         double stdDevTurnovers = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getTurnoversPerGame).toArray(), meanTurnovers);
+        double rmsDevTurnovers = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getTurnoversPerGame).toArray());
 
         double meanFreeThrowPercentage = calculateMean(players.stream().mapToDouble(NBAPlayer::getFreeThrowPercentage).toArray());
         double stdDevFreeThrowPercentage = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getFreeThrowPercentage).toArray(), meanFreeThrowPercentage);
+        double rmsDevFreeThrowPercentage = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getFreeThrowPercentage).toArray());
 
         double meanSteals = calculateMean(players.stream().mapToDouble(NBAPlayer::getStealsPerGame).toArray());
         double stdDevSteals = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getStealsPerGame).toArray(), meanSteals);
+        double rmsDevSteals = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getStealsPerGame).toArray());
 
         double meanBlocks = calculateMean(players.stream().mapToDouble(NBAPlayer::getBlocksPerGame).toArray());
         double stdDevBlocks = calculateStdDev(players.stream().mapToDouble(NBAPlayer::getBlocksPerGame).toArray(), meanBlocks);
-
-        // Debugging: Print out mean and standard deviation for each stat
-        System.out.println("Mean and StdDev for each stat:");
-        System.out.println("Points: Mean=" + meanPoints + ", StdDev=" + stdDevPoints);
-        System.out.println("Rebounds: Mean=" + meanRebounds + ", StdDev=" + stdDevRebounds);
-        System.out.println("Assists: Mean=" + meanAssists + ", StdDev=" + stdDevAssists);
-        System.out.println("ThreePointsMade: Mean=" + meanThreePointsMade + ", StdDev=" + stdDevThreePointsMade);
-        System.out.println("FieldGoalPercentage: Mean=" + meanFieldGoalPercentage + ", StdDev=" + stdDevFieldGoalPercentage);
-        System.out.println("Turnovers: Mean=" + meanTurnovers + ", StdDev=" + stdDevTurnovers);
-        System.out.println("FreeThrowPercentage: Mean=" + meanFreeThrowPercentage + ", StdDev=" + stdDevFreeThrowPercentage);
-        System.out.println("Steals: Mean=" + meanSteals + ", StdDev=" + stdDevSteals);
-        System.out.println("Blocks: Mean=" + meanBlocks + ", StdDev=" + stdDevBlocks);
+        double rmsDevBlocks = calculateRMSDev(players.stream().mapToDouble(NBAPlayer::getBlocksPerGame).toArray());
 
         // Calculate ranking scores for each player
         for (NBAPlayer player : players) {
-            double rankingScore = calculateRankingScore(player, meanPoints, stdDevPoints, meanRebounds, stdDevRebounds,
-                    meanAssists, stdDevAssists, meanThreePointsMade, stdDevThreePointsMade, meanFieldGoalPercentage,
-                    stdDevFieldGoalPercentage, meanTurnovers, stdDevTurnovers, meanFreeThrowPercentage, stdDevFreeThrowPercentage,
-                    meanSteals, stdDevSteals, meanBlocks, stdDevBlocks);
+            double gPoints = (player.getPointsPerGame() - meanPoints) / Math.sqrt(rmsDevPoints * rmsDevPoints + stdDevPoints * stdDevPoints);
+            double gRebounds = (player.getRebounds() - meanRebounds) / Math.sqrt(rmsDevRebounds * rmsDevRebounds + stdDevRebounds * stdDevRebounds);
+            double gAssists = (player.getAssistsPerGame() - meanAssists) / Math.sqrt(rmsDevAssists * rmsDevAssists + stdDevAssists * stdDevAssists);
+            double gThreePointsMade = (player.getThreePointsMade() - meanThreePointsMade) / Math.sqrt(rmsDevThreePointsMade * rmsDevThreePointsMade + stdDevThreePointsMade * stdDevThreePointsMade);
+
+            double gFieldGoalPercentage = (player.getFieldGoalPercentage() - meanFieldGoalPercentage) * player.getFieldGoalsAttempted() / meanFieldGoalAttempts(players) / Math.sqrt(rmsDevFieldGoalPercentage * rmsDevFieldGoalPercentage + stdDevFieldGoalPercentage * stdDevFieldGoalPercentage);
+            double gTurnovers = (meanTurnovers - player.getTurnoversPerGame()) / Math.sqrt(rmsDevTurnovers * rmsDevTurnovers + stdDevTurnovers * stdDevTurnovers);
+            double gFreeThrowPercentage = (player.getFreeThrowPercentage() - meanFreeThrowPercentage) * player.getFreeThrowsAttempted() / meanFreeThrowAttempts(players) / Math.sqrt(rmsDevFreeThrowPercentage * rmsDevFreeThrowPercentage + stdDevFreeThrowPercentage * stdDevFreeThrowPercentage);
+            double gSteals = (player.getStealsPerGame() - meanSteals) / Math.sqrt(rmsDevSteals * rmsDevSteals + stdDevSteals * stdDevSteals);
+            double gBlocks = (player.getBlocksPerGame() - meanBlocks) / Math.sqrt(rmsDevBlocks * rmsDevBlocks + stdDevBlocks * stdDevBlocks);
+
+            // Combine scores into a final ranking score
+            double rankingScore = gPoints + gRebounds + gAssists + gThreePointsMade + gFieldGoalPercentage + gTurnovers + gFreeThrowPercentage + gSteals + gBlocks;
+
             player.setRankingScore(rankingScore);
             playerRepository.save(player);
+
             // Debugging: Print out each player's ranking score
             System.out.println(player.getFirstName() + " " + player.getLastName() + ": RankingScore=" + rankingScore);
         }
@@ -230,32 +238,16 @@ public class NBAPlayerService {
         return Math.sqrt(DoubleStream.of(values).map(v -> Math.pow(v - mean, 2)).average().orElse(0.0));
     }
 
-    private double calculateRankingScore(NBAPlayer player, double meanPoints, double stdDevPoints,
-                                         double meanRebounds, double stdDevRebounds, double meanAssists, double stdDevAssists,
-                                         double meanThreePointsMade, double stdDevThreePointsMade, double meanFieldGoalPercentage,
-                                         double stdDevFieldGoalPercentage, double meanTurnovers, double stdDevTurnovers,
-                                         double meanFreeThrowPercentage, double stdDevFreeThrowPercentage, double meanSteals,
-                                         double stdDevSteals, double meanBlocks, double stdDevBlocks) {
+    private double calculateRMSDev(double[] values) {
+        return Math.sqrt(DoubleStream.of(values).map(v -> v * v).average().orElse(0.0));
+    }
 
-        double gPoints = (player.getPointsPerGame() - meanPoints) / stdDevPoints;
-        double gRebounds = (player.getRebounds() - meanRebounds) / stdDevRebounds;
-        double gAssists = (player.getAssistsPerGame() - meanAssists) / stdDevAssists;
-        double gThreePointsMade = (player.getThreePointsMade() - meanThreePointsMade) / stdDevThreePointsMade;
+    private double meanFieldGoalAttempts(List<NBAPlayer> players) {
+        return players.stream().mapToDouble(NBAPlayer::getFieldGoalsAttempted).average().orElse(0.0);
+    }
 
-        double zFieldGoalPercentage = (player.getFieldGoalPercentage() - meanFieldGoalPercentage) / stdDevFieldGoalPercentage;
-        double zTurnovers = (player.getTurnoversPerGame() - meanTurnovers) / stdDevTurnovers;
-        double zFreeThrowPercentage = (player.getFreeThrowPercentage() - meanFreeThrowPercentage) / stdDevFreeThrowPercentage;
-        double zSteals = (player.getStealsPerGame() - meanSteals) / stdDevSteals;
-        double zBlocks = (player.getBlocksPerGame() - meanBlocks) / stdDevBlocks;
-
-        // Adjust field goal and free throw percentages by the number of attempts
-        zFieldGoalPercentage *= player.getFieldGoalsAttempted();
-        zFreeThrowPercentage *= player.getFreeThrowsAttempted();
-
-        // Combine scores into a final ranking score
-        return gPoints * 0.2 + gRebounds * 0.2 + gAssists * 0.2 + gThreePointsMade * 0.1 +
-                zFieldGoalPercentage * 0.1 + zTurnovers * 0.1 + zFreeThrowPercentage * 0.05 +
-                zSteals * 0.025 + zBlocks * 0.025;
+    private double meanFreeThrowAttempts(List<NBAPlayer> players) {
+        return players.stream().mapToDouble(NBAPlayer::getFreeThrowsAttempted).average().orElse(0.0);
     }
 }
 
