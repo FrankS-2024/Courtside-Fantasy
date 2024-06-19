@@ -11,32 +11,29 @@ import {
     Paper,
     CircularProgress,
     TablePagination,
+    Collapse,
 } from '@mui/material';
 
 const PlayerList = ({ players, isLoading }) => {
-    const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(200);
+    const [openRows, setOpenRows] = useState({});
 
     const formatPercentage = (value) => {
         return (value * 100).toFixed(1) + '%';
     };
 
-    const handlePlayerClick = (player) => {
-        setSelectedPlayer(player);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    const handleRowClick = (playerId) => {
+        setOpenRows((prevOpenRows) => ({
+            ...prevOpenRows,
+            [playerId]: !prevOpenRows[playerId],
+        }));
     };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 
-    // const handleChangeRowsPerPage = (event) => {
-    //     setRowsPerPage(parseInt(event.target.value, 10));
-    //     setPage(0);
-    // };
-
-    // Slice the players array based on pagination state
     const paginatedPlayers = players.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const tableCellStyle = {
@@ -47,10 +44,8 @@ const PlayerList = ({ players, isLoading }) => {
         ...tableCellStyle,
         backgroundColor: '#FF6600',
         fontWeight: 'bold',
-        fontSize: '15px'
+        fontSize: '15px',
     };
-
-
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white">
@@ -67,27 +62,24 @@ const PlayerList = ({ players, isLoading }) => {
                 <header className="flex flex-col items-center mb-5">
                     <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text">NBA Player Statistics for 2023-24 Season</h2>
                 </header>
-                {isLoading ? (
-                    <CircularProgress color="inherit" />
-                ) : (
-                    <>
-                        {selectedPlayer && <PlayerDetail player={selectedPlayer} />}
-                        <TableContainer component={Paper} style={{ backgroundColor: 'transparent', width: '90%' }}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        {['Rank', 'Score', 'Name', 'Team', 'Position', 'Games Played', 'Minutes', 'Points', 'Threes', 'Rebounds',
-                                            'Assists', 'Steals', 'Blocks', 'Field Goal %', 'Field Goal Attempts', 'Free Throw %',
-                                            'Free Throw Attempts', 'Turnovers'].map((header) => (
-                                            <TableCell key={header} style={headerCellStyle}>
-                                                {header}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {paginatedPlayers.map((player, index) => (
-                                        <TableRow key={player.id} onClick={() => handlePlayerClick(player)} style={{ cursor: 'pointer' }} hover>
+                {isLoading ? (<CircularProgress color="inherit" />) : (
+                    <TableContainer component={Paper} style={{ backgroundColor: 'transparent', width: '90%' }}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    {['Rank', 'Score', 'Name', 'Team', 'Position', 'Games Played', 'Minutes', 'Points', 'Threes', 'Rebounds',
+                                        'Assists', 'Steals', 'Blocks', 'Field Goal %', 'Field Goal Attempts', 'Free Throw %',
+                                        'Free Throw Attempts', 'Turnovers'].map((header) => (
+                                        <TableCell key={header} style={headerCellStyle}>
+                                            {header}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {paginatedPlayers.map((player, index) => (
+                                    <React.Fragment key={player.id}>
+                                        <TableRow onClick={() => handleRowClick(player.id)} style={{ cursor: 'pointer' }} hover>
                                             <TableCell style={tableCellStyle}>{page * rowsPerPage + index + 1}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.rankingScore.toFixed(2)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.firstName} {player.lastName}</TableCell>
@@ -107,10 +99,17 @@ const PlayerList = ({ players, isLoading }) => {
                                             <TableCell style={tableCellStyle}>{player.freeThrowsAttempted.toFixed(1)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.turnoversPerGame.toFixed(1)}</TableCell>
                                         </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
+                                        <TableRow>
+                                            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={18}>
+                                                <Collapse in={openRows[player.id]} timeout="auto" unmountOnExit>
+                                                    <PlayerDetail player={player} />
+                                                </Collapse>
+                                            </TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
+                                ))}
+                            </TableBody>
+                        </Table>
                         <TablePagination
                             rowsPerPageOptions={[200]}
                             component="div"
@@ -118,9 +117,8 @@ const PlayerList = ({ players, isLoading }) => {
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
-                            style={{ color: 'white' }}
                         />
-                    </>
+                    </TableContainer>
                 )}
             </main>
         </div>
