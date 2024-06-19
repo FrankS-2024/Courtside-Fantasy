@@ -47,6 +47,13 @@ const PlayerList = ({ players, isLoading }) => {
         fontSize: '15px',
     };
 
+    const formatV = (gValue) => {
+        if (gValue === null || gValue === undefined) {
+            return null;
+        }
+        return gValue.toFixed(2);
+    };
+
     return (
         <div className="min-h-screen bg-neutral-900 text-white">
             <header className="h-24 bg-neutral-900">
@@ -63,13 +70,13 @@ const PlayerList = ({ players, isLoading }) => {
                     <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text">NBA Player Statistics for 2023-24 Season</h2>
                 </header>
                 {isLoading ? (<CircularProgress color="inherit" />) : (
-                    <TableContainer component={Paper} style={{ backgroundColor: 'transparent', width: '90%' }}>
+                    <TableContainer component={Paper} style={{ backgroundColor: 'transparent', width: '100%' }}>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    {['Rank', 'Score', 'Name', 'Team', 'Position', 'Games Played', 'Minutes', 'Points', 'Threes', 'Rebounds',
-                                        'Assists', 'Steals', 'Blocks', 'Field Goal %', 'Field Goal Attempts', 'Free Throw %',
-                                        'Free Throw Attempts', 'Turnovers'].map((header) => (
+                                    {['Rank', 'Score', 'Name', 'Team', 'Position', 'Games Played', 'Minutes', 'Points', 'pointV', 'Threes', 'threeV', 'Rebounds', 'reboundV',
+                                        'Assists', 'assistV', 'Steals', 'stealV', 'Blocks', 'blockV', 'Field Goal %', 'Field Goal Attempts', 'fieldgoalV','Free Throw %',
+                                        'Free Throw Attempts', 'freethrowV', 'Turnovers', 'turnoverV'].map((header) => (
                                         <TableCell key={header} style={headerCellStyle}>
                                             {header}
                                         </TableCell>
@@ -88,16 +95,25 @@ const PlayerList = ({ players, isLoading }) => {
                                             <TableCell style={tableCellStyle}>{player.gamesPlayed}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.minutesPerGame}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.pointsPerGame.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.pointV)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.threePointsMade.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.threepointsMadeV)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.rebounds.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.reboundV)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.assistsPerGame.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.assistV)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.stealsPerGame.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.stealV)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.blocksPerGame.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.blockV)}</TableCell>
                                             <TableCell style={tableCellStyle}>{formatPercentage(player.fieldGoalPercentage)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.fieldGoalsAttempted.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.fieldGoalV)}</TableCell>
                                             <TableCell style={tableCellStyle}>{formatPercentage(player.freeThrowPercentage)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.freeThrowsAttempted.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.freeThrowV)}</TableCell>
                                             <TableCell style={tableCellStyle}>{player.turnoversPerGame.toFixed(1)}</TableCell>
+                                            <TableCell style={tableCellStyle}>{formatV(player.turnoverV)}</TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={18}>

@@ -31,6 +31,15 @@ public class NBAPlayer {
     private double threePointsAttempted;
     private String playerImg;
     private double rankingScore;
+    private double pointV;
+    private double reboundV;
+    private double assistV;
+    private double threepointsMadeV;
+    private double stealV;
+    private double blockV;
+    private double fieldGoalV;
+    private double freeThrowV;
+    private double turnoverV;
 
     // Default constructor
     public NBAPlayer() {
@@ -235,5 +244,77 @@ public class NBAPlayer {
 
     public void setRankingScore(double rankingScore) {
         this.rankingScore = rankingScore;
+    }
+
+    public double getPointV() {
+        return pointV;
+    }
+
+    public void setPointV(double pointV) {
+        this.pointV = pointV;
+    }
+
+    public double getReboundV() {
+        return reboundV;
+    }
+
+    public void setReboundV(double reboundV) {
+        this.reboundV = reboundV;
+    }
+
+    public double getAssistV() {
+        return assistV;
+    }
+
+    public void setAssistV(double assistV) {
+        this.assistV = assistV;
+    }
+
+    public double getThreepointsMadeV() {
+        return threepointsMadeV;
+    }
+
+    public void setThreepointsMadeV(double threepointsMadeV) {
+        this.threepointsMadeV = threepointsMadeV;
+    }
+
+    public double getStealV() {
+        return stealV;
+    }
+
+    public void setStealV(double stealV) {
+        this.stealV = stealV;
+    }
+
+    public double getBlockV() {
+        return blockV;
+    }
+
+    public void setBlockV(double blockV) {
+        this.blockV = blockV;
+    }
+
+    public double getFieldGoalV() {
+        return fieldGoalV;
+    }
+
+    public void setFieldGoalV(double fieldGoalV) {
+        this.fieldGoalV = fieldGoalV;
+    }
+
+    public double getFreeThrowV() {
+        return freeThrowV;
+    }
+
+    public void setFreeThrowV(double freeThrowV) {
+        this.freeThrowV = freeThrowV;
+    }
+
+    public double getTurnoverV() {
+        return turnoverV;
+    }
+
+    public void setTurnoverV(double turnoverV) {
+        this.turnoverV = turnoverV;
     }
 }

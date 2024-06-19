@@ -205,7 +205,7 @@ public class NBAPlayerService {
 
         double meanFreeThrowPercentage = calculateMean(filteredPlayers.stream().mapToDouble(NBAPlayer::getFreeThrowPercentage).toArray());
         double stdDevFreeThrowPercentage = calculateStdDev(filteredPlayers.stream().mapToDouble(NBAPlayer::getFreeThrowPercentage).toArray(), meanFreeThrowPercentage);
-        double rmsDevFreeThrowPercentage = calculateRMSDev(filteredPlayers.stream().mapToDouble(NBAPlayer::getFreeThrowPercentage).toArray());
+        double rmsDevFreeThrowPercentage = calculateRMSDev(filteredPlayers.stream().mapToDouble(NBAPlayer::getFreeThrowPercentage).toArray()) ;
 
         double meanSteals = calculateMean(filteredPlayers.stream().mapToDouble(NBAPlayer::getStealsPerGame).toArray());
         double stdDevSteals = calculateStdDev(filteredPlayers.stream().mapToDouble(NBAPlayer::getStealsPerGame).toArray(), meanSteals);
@@ -215,28 +215,48 @@ public class NBAPlayerService {
         double stdDevBlocks = calculateStdDev(filteredPlayers.stream().mapToDouble(NBAPlayer::getBlocksPerGame).toArray(), meanBlocks);
         double rmsDevBlocks = calculateRMSDev(filteredPlayers.stream().mapToDouble(NBAPlayer::getBlocksPerGame).toArray());
 
+        double meanFGA = meanFieldGoalAttempts(filteredPlayers);
+        double meanFTA = meanFreeThrowAttempts(filteredPlayers);
+
         // Calculate ranking scores for each player
         for (NBAPlayer player : players) {
-            double gPoints = (player.getPointsPerGame() - meanPoints) / Math.sqrt(rmsDevPoints * rmsDevPoints + stdDevPoints * stdDevPoints);
-            double gRebounds = (player.getRebounds() - meanRebounds) / Math.sqrt(rmsDevRebounds * rmsDevRebounds + stdDevRebounds * stdDevRebounds);
-            double gAssists = (player.getAssistsPerGame() - meanAssists) / Math.sqrt(rmsDevAssists * rmsDevAssists + stdDevAssists * stdDevAssists);
-            double gThreePointsMade = (player.getThreePointsMade() - meanThreePointsMade) / Math.sqrt(rmsDevThreePointsMade * rmsDevThreePointsMade + stdDevThreePointsMade * stdDevThreePointsMade);
+            double gPoints = (player.getPointsPerGame() - meanPoints) / stdDevPoints;
+            player.setPointV(gPoints);
+            double gRebounds = (player.getRebounds() - meanRebounds) / stdDevRebounds ;
+            player.setReboundV(gRebounds);
+            double gAssists = (player.getAssistsPerGame() - meanAssists) /stdDevAssists;
+            player.setAssistV(gAssists);
+            double gThreePointsMade = (player.getThreePointsMade() - meanThreePointsMade) / stdDevThreePointsMade;
+            player.setThreepointsMadeV(gThreePointsMade);
 
-            double gFieldGoalPercentage = (player.getFieldGoalPercentage() - meanFieldGoalPercentage) * player.getFieldGoalsAttempted() / meanFieldGoalAttempts(filteredPlayers) / Math.sqrt(rmsDevFieldGoalPercentage * rmsDevFieldGoalPercentage + stdDevFieldGoalPercentage * stdDevFieldGoalPercentage);
-            double gTurnovers = (meanTurnovers - player.getTurnoversPerGame()) / Math.sqrt(rmsDevTurnovers * rmsDevTurnovers + stdDevTurnovers * stdDevTurnovers);
-            double gFreeThrowPercentage = (player.getFreeThrowPercentage() - meanFreeThrowPercentage) * player.getFreeThrowsAttempted() / meanFreeThrowAttempts(filteredPlayers) / Math.sqrt(rmsDevFreeThrowPercentage * rmsDevFreeThrowPercentage + stdDevFreeThrowPercentage * stdDevFreeThrowPercentage);
-            double gSteals = (player.getStealsPerGame() - meanSteals) / Math.sqrt(rmsDevSteals * rmsDevSteals + stdDevSteals * stdDevSteals);
-            double gBlocks = (player.getBlocksPerGame() - meanBlocks) / Math.sqrt(rmsDevBlocks * rmsDevBlocks + stdDevBlocks * stdDevBlocks);
+            double gFieldGoalPercentage = (player.getFieldGoalPercentage() - meanFieldGoalPercentage) * (player.getFieldGoalsAttempted() / meanFGA) / stdDevFieldGoalPercentage;
+            player.setFieldGoalV(gFieldGoalPercentage);
+            double gTurnovers = (meanTurnovers - player.getTurnoversPerGame()) * 0.7 / stdDevTurnovers;
+            player.setTurnoverV(gTurnovers);
+            double gFreeThrowPercentage = (player.getFreeThrowPercentage() - meanFreeThrowPercentage) * (player.getFreeThrowsAttempted() / meanFTA) / stdDevFreeThrowPercentage;
+            player.setFreeThrowV(gFreeThrowPercentage);
+            double gSteals = (player.getStealsPerGame() - meanSteals) /stdDevSteals;
+            player.setStealV(gSteals);
+            double gBlocks = (player.getBlocksPerGame() - meanBlocks) / stdDevBlocks;
+            player.setBlockV(gBlocks);
 
             // Combine scores into a final ranking score
             double rankingScore = gPoints + gRebounds + gAssists + gThreePointsMade + gFieldGoalPercentage + gTurnovers + gFreeThrowPercentage + gSteals + gBlocks;
 
             player.setRankingScore(rankingScore);
             playerRepository.save(player);
-
-            // Debugging: Print out each player's ranking score
-            System.out.println(player.getFirstName() + " " + player.getLastName() + ": RankingScore=" + rankingScore);
         }
+        System.out.println(meanPoints);
+        System.out.println(meanRebounds);
+        System.out.println(meanAssists);
+        System.out.println(meanThreePointsMade);
+        System.out.println(meanFieldGoalPercentage);
+        System.out.println(meanTurnovers);
+        System.out.println(meanFreeThrowPercentage);
+        System.out.println(meanSteals);
+        System.out.println(meanBlocks);
+        System.out.println(meanFGA);
+        System.out.println(meanFTA);
     }
 
     private double calculateMean(double[] values) {
