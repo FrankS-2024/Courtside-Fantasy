@@ -12,11 +12,12 @@ import {
     CircularProgress,
     TablePagination,
     Collapse,
+    Tooltip
 } from '@mui/material';
 
 const PlayerList = ({ players, isLoading }) => {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(200);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     const [openRows, setOpenRows] = useState({});
 
     const formatPercentage = (value) => {
@@ -34,25 +35,33 @@ const PlayerList = ({ players, isLoading }) => {
         setPage(newPage);
     };
 
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+        setOpenRows({});
+    };
+
     const paginatedPlayers = players.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const tableCellStyle = {
         color: 'white',
+        fontSize: '15px',
+        //width: '5.5%',
+        textAlign: 'center',
     };
 
     const headerCellStyle = {
         ...tableCellStyle,
         backgroundColor: '#FF6600',
         fontWeight: 'bold',
-        fontSize: '15px',
+        fontSize: '16px',
     };
 
-    const formatV = (gValue) => {
-        if (gValue === null || gValue === undefined) {
-            return null;
-        }
-        return gValue.toFixed(2);
-    };
+    const headers = [
+        'Rank', 'Courtside Score', 'Name', 'Team', 'Position', 'Games Played', 'Minutes', 'Points', 'Threes', 'Rebounds',
+        'Assists', 'Steals', 'Blocks', 'Field Goal %', 'Field Goal Attempts', 'Free Throw %',
+        'Free Throw Attempts', 'Turnovers'
+    ];
 
     return (
         <div className="min-h-screen bg-neutral-900 text-white">
@@ -66,17 +75,13 @@ const PlayerList = ({ players, isLoading }) => {
                 </div>
             </header>
             <main className="p-5 flex flex-col items-center">
-                <header className="flex flex-col items-center mb-5">
-                    <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text">NBA Player Statistics for 2023-24 Season</h2>
-                </header>
+                <h2 className="text-5xl font-bold mb-10 bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text">Courtside Fantasy Rankings for 2023-24 Season</h2>
                 {isLoading ? (<CircularProgress color="inherit" />) : (
-                    <TableContainer component={Paper} style={{ backgroundColor: 'transparent', width: '100%' }}>
+                    <TableContainer component={Paper} style={{ backgroundColor: 'transparent', width: '95%' }}>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    {['Rank', 'Score', 'Name', 'Team', 'Position', 'Games Played', 'Minutes', 'Points', 'pointV', 'Threes', 'threeV', 'Rebounds', 'reboundV',
-                                        'Assists', 'assistV', 'Steals', 'stealV', 'Blocks', 'blockV', 'Field Goal %', 'Field Goal Attempts', 'fieldgoalV','Free Throw %',
-                                        'Free Throw Attempts', 'freethrowV', 'Turnovers', 'turnoverV'].map((header) => (
+                                    {headers.map((header) => (
                                         <TableCell key={header} style={headerCellStyle}>
                                             {header}
                                         </TableCell>
@@ -87,33 +92,30 @@ const PlayerList = ({ players, isLoading }) => {
                                 {paginatedPlayers.map((player, index) => (
                                     <React.Fragment key={player.id}>
                                         <TableRow onClick={() => handleRowClick(player.id)} style={{ cursor: 'pointer' }} hover>
-                                            <TableCell style={tableCellStyle}>{page * rowsPerPage + index + 1}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.rankingScore.toFixed(2)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.firstName} {player.lastName}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.teamAbbreviation}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.position}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.gamesPlayed}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.minutesPerGame}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.pointsPerGame.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.pointV)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.threePointsMade.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.threepointsMadeV)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.rebounds.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.reboundV)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.assistsPerGame.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.assistV)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.stealsPerGame.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.stealV)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.blocksPerGame.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.blockV)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatPercentage(player.fieldGoalPercentage)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.fieldGoalsAttempted.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.fieldGoalV)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatPercentage(player.freeThrowPercentage)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.freeThrowsAttempted.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.freeThrowV)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{player.turnoversPerGame.toFixed(1)}</TableCell>
-                                            <TableCell style={tableCellStyle}>{formatV(player.turnoverV)}</TableCell>
+                                            {[
+                                                page * rowsPerPage + index + 1,
+                                                player.rankingScore.toFixed(2),
+                                                `${player.firstName} ${player.lastName}`,
+                                                player.teamAbbreviation,
+                                                player.position,
+                                                player.gamesPlayed,
+                                                player.minutesPerGame,
+                                                player.pointsPerGame.toFixed(1),
+                                                player.threePointsMade.toFixed(1),
+                                                player.rebounds.toFixed(1),
+                                                player.assistsPerGame.toFixed(1),
+                                                player.stealsPerGame.toFixed(1),
+                                                player.blocksPerGame.toFixed(1),
+                                                formatPercentage(player.fieldGoalPercentage),
+                                                player.fieldGoalsAttempted.toFixed(1),
+                                                formatPercentage(player.freeThrowPercentage),
+                                                player.freeThrowsAttempted.toFixed(1),
+                                                player.turnoversPerGame.toFixed(1)
+                                            ].map((cell, cellIndex) => (
+                                                <Tooltip key={cellIndex} title={headers[cellIndex]} arrow>
+                                                    <TableCell style={tableCellStyle}>{cell}</TableCell>
+                                                </Tooltip>
+                                            ))}
                                         </TableRow>
                                         <TableRow>
                                             <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={18}>
@@ -127,12 +129,18 @@ const PlayerList = ({ players, isLoading }) => {
                             </TableBody>
                         </Table>
                         <TablePagination
-                            rowsPerPageOptions={[200]}
+                            rowsPerPageOptions={[10, 50, 100, 200]}
                             component="div"
                             count={players.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                            sx={{
+                                ".MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows, .MuiTablePagination-actions, .MuiInputBase-root, .MuiSelect-icon , .MuiSelect-select": {
+                                    color: "white",
+                                }
+                            }}
                         />
                     </TableContainer>
                 )}
