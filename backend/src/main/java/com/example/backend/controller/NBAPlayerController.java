@@ -5,9 +5,7 @@ import com.example.backend.service.NBAPlayerService;
 import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,5 +33,33 @@ public class NBAPlayerController {
     public ResponseEntity<String> rankPlayers() {
         playerService.calculatePlayerRankings();
         return ResponseEntity.ok("Players ranked successfully");
+    }
+
+    @PostMapping("/analyze-trade")
+    public ResponseEntity<Double> analyzeTrade(@RequestBody TradeRequest tradeRequest) {
+        double scoreDifference = playerService.analyzeTrade(tradeRequest.getTradingAwayIds(), tradeRequest.getReceivingIds());
+        return ResponseEntity.ok(scoreDifference);
+    }
+
+    // Add a TradeRequest class
+    public static class TradeRequest {
+        private List<Long> tradingAwayIds;
+        private List<Long> receivingIds;
+
+        public List<Long> getTradingAwayIds() {
+            return tradingAwayIds;
+        }
+
+        public void setTradingAwayIds(List<Long> tradingAwayIds) {
+            this.tradingAwayIds = tradingAwayIds;
+        }
+
+        public List<Long> getReceivingIds() {
+            return receivingIds;
+        }
+
+        public void setReceivingIds(List<Long> receivingIds) {
+            this.receivingIds = receivingIds;
+        }
     }
 }

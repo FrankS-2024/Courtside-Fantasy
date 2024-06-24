@@ -259,6 +259,16 @@ public class NBAPlayerService {
         System.out.println(meanFTA);
     }
 
+    public double analyzeTrade(List<Long> tradingAwayIds, List<Long> receivingIds) {
+        List<NBAPlayer> tradingAwayPlayers = playerRepository.findAllById(tradingAwayIds);
+        List<NBAPlayer> receivingPlayers = playerRepository.findAllById(receivingIds);
+
+        double tradingAwayScore = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getRankingScore).sum();
+        double receivingScore = receivingPlayers.stream().mapToDouble(NBAPlayer::getRankingScore).sum();
+
+        return receivingScore - tradingAwayScore;
+    }
+
     private double calculateMean(double[] values) {
         return DoubleStream.of(values).average().orElse(0.0);
     }

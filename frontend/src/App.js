@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import axios from 'axios';
 import PlayerList from "./components/PlayerList";
 import LandingPage from './components/LandingPage';
+import TradeAnalyzer from "./components/TradeAnalyzerPage";
 
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
               <Routes>
                   <Route path="/" element={<LandingPage />} />
                   <Route path="/players" element={<PlayerList players={players} isLoading={isLoading} />} />
+                  <Route path="/trade" element={<TradeAnalyzer players={players} />} />
               </Routes>
           </div>
       </Router>
