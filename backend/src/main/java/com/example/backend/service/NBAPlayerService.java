@@ -259,14 +259,53 @@ public class NBAPlayerService {
         System.out.println(meanFTA);
     }
 
-    public double analyzeTrade(List<Long> tradingAwayIds, List<Long> receivingIds) {
+    public Map<String, Double> analyzeTrade(List<Long> tradingAwayIds, List<Long> receivingIds) {
         List<NBAPlayer> tradingAwayPlayers = playerRepository.findAllById(tradingAwayIds);
         List<NBAPlayer> receivingPlayers = playerRepository.findAllById(receivingIds);
 
         double tradingAwayScore = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getRankingScore).sum();
         double receivingScore = receivingPlayers.stream().mapToDouble(NBAPlayer::getRankingScore).sum();
 
-        return receivingScore - tradingAwayScore;
+        double tradingAwayPoints = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getPointsPerGame).sum();
+        double receivingPoints = receivingPlayers.stream().mapToDouble(NBAPlayer::getPointsPerGame).sum();
+
+        double tradingAwayRebounds = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getRebounds).sum();
+        double receivingRebounds = receivingPlayers.stream().mapToDouble(NBAPlayer::getRebounds).sum();
+
+        double tradingAwayAssists = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getAssistsPerGame).sum();
+        double receivingAssists = receivingPlayers.stream().mapToDouble(NBAPlayer::getAssistsPerGame).sum();
+
+        double tradingAwayTurnovers = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getTurnoversPerGame).sum();
+        double receivingTurnovers = receivingPlayers.stream().mapToDouble(NBAPlayer::getTurnoversPerGame).sum();
+
+        double tradingAwayThreePointers = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getThreePointsMade).sum();
+        double receivingThreePointers = receivingPlayers.stream().mapToDouble(NBAPlayer::getThreePointsMade).sum();
+
+        double tradingAwaySteals = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getStealsPerGame).sum();
+        double receivingSteals = receivingPlayers.stream().mapToDouble(NBAPlayer::getStealsPerGame).sum();
+
+        double tradingAwayBlocks = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getBlocksPerGame).sum();
+        double receivingBlocks = receivingPlayers.stream().mapToDouble(NBAPlayer::getBlocksPerGame).sum();
+
+        double tradingAwayFreeThrows = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getFreeThrowV).sum();
+        double receivingFreeThrows = receivingPlayers.stream().mapToDouble(NBAPlayer::getFreeThrowV).sum();
+
+        double tradingAwayFieldGoals = tradingAwayPlayers.stream().mapToDouble(NBAPlayer::getFieldGoalV).sum();
+        double receivingFieldGoals = receivingPlayers.stream().mapToDouble(NBAPlayer::getFieldGoalV).sum();
+
+        Map<String, Double> analysisResult = new HashMap<>();
+        analysisResult.put("scoreDifference", receivingScore - tradingAwayScore);
+        analysisResult.put("pointsDifference", receivingPoints - tradingAwayPoints);
+        analysisResult.put("reboundsDifference", receivingRebounds - tradingAwayRebounds);
+        analysisResult.put("assistsDifference", receivingAssists - tradingAwayAssists);
+        analysisResult.put("turnoversDifference", receivingTurnovers - tradingAwayTurnovers);
+        analysisResult.put("threePointersDifference", receivingThreePointers - tradingAwayThreePointers);
+        analysisResult.put("stealsDifference", receivingSteals - tradingAwaySteals);
+        analysisResult.put("blocksDifference", receivingBlocks - tradingAwayBlocks);
+        analysisResult.put("freeThrowsDifference", receivingFreeThrows - tradingAwayFreeThrows);
+        analysisResult.put("fieldGoalsDifference", receivingFieldGoals - tradingAwayFieldGoals);
+
+        return analysisResult;
     }
 
     private double calculateMean(double[] values) {

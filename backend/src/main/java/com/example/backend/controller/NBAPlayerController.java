@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -36,9 +37,9 @@ public class NBAPlayerController {
     }
 
     @PostMapping("/analyze-trade")
-    public ResponseEntity<Double> analyzeTrade(@RequestBody TradeRequest tradeRequest) {
-        double scoreDifference = playerService.analyzeTrade(tradeRequest.getTradingAwayIds(), tradeRequest.getReceivingIds());
-        return ResponseEntity.ok(scoreDifference);
+    public ResponseEntity<Map<String, Double>> analyzeTrade(@RequestBody TradeRequest tradeRequest) {
+        Map<String, Double> analysisResult = playerService.analyzeTrade(tradeRequest.getTradingAwayIds(), tradeRequest.getReceivingIds());
+        return ResponseEntity.ok(analysisResult);
     }
 
     // Add a TradeRequest class
