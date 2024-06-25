@@ -39,6 +39,11 @@ const TradeAnalyzer = ({ players }) => {
         }
     };
 
+    // Filter out players already selected in tradingAway or receiving
+    const availablePlayers = players.filter(
+        player => !tradingAway.some(p => p.id === player.id) && !receiving.some(p => p.id === player.id)
+    );
+
     return (
         <div className="bg-neutral-900 min-h-screen">
             <nav className="bg-neutral-900 text-white p-4 sticky top-0">
@@ -77,7 +82,7 @@ const TradeAnalyzer = ({ players }) => {
                                     onChange={(e) => handleSelectPlayer(e.target.value, true)}
                                 >
                                     <option value="">Select a player...</option>
-                                    {players.map(player => (
+                                    {availablePlayers.map(player => (
                                         <option key={player.id} value={player.id}>{player.firstName} {player.lastName}</option>
                                     ))}
                                 </select>
@@ -101,7 +106,7 @@ const TradeAnalyzer = ({ players }) => {
                                     onChange={(e) => handleSelectPlayer(e.target.value, false)}
                                 >
                                     <option value="">Select a player...</option>
-                                    {players.map(player => (
+                                    {availablePlayers.map(player => (
                                         <option key={player.id} value={player.id}>{player.firstName} {player.lastName}</option>
                                     ))}
                                 </select>
@@ -119,12 +124,22 @@ const TradeAnalyzer = ({ players }) => {
                     <section id="trade-analysis">
                         <h2 className="text-2xl text-white font-semibold mb-6">Trade Analysis</h2>
                         <div className="bg-neutral-900 text-white p-4 rounded">
-                            <p>Difference in Ranking Scores: <span className="font-bold">{tradeResult}</span></p>
-                            {tradeResult > 0 ? (
+                            <p className="text-lg font-bold">Difference in Ranking Scores: <span className="text-2xl">{tradeResult.scoreDifference.toFixed(2)}</span></p>
+                            {tradeResult.scoreDifference > 1.5 ? (
                                 <p className="text-green-500 font-bold mt-4">This trade improves your team!</p>
-                            ) : (
+                            ) : tradeResult.scoreDifference < -1.5 ? (
                                 <p className="text-red-500 font-bold mt-4">This trade may weaken your team.</p>
+                            ) : (
+                                <p className="text-yellow-500 font-bold mt-4">This trade is fair. Consider the changes it makes to your team and if those are necessary.</p>
                             )}
+                            <hr className="my-4"/>
+                            {Object.entries(tradeResult).map(([key, value]) => (
+                                key !== "scoreDifference" && (
+                                    <p key={key}>
+                                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}: <span className="font-bold">{value.toFixed(2)}</span>
+                                    </p>
+                                )
+                            ))}
                         </div>
                     </section>
                 )}
