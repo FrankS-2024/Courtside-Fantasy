@@ -47,7 +47,7 @@ const PlayerDetail = ({ player }) => {
             <div className="w-3/4">
                 <div className="grid grid-cols-2 mb-4">
                     <h2 className="col-span-1 text-2xl font-bold text-center mr-16">Per Game Stats</h2>
-                    <h2 className="col-span-1 text-2xl font-bold text-center ml-16">Courtside Score</h2>
+                    <h2 className="col-span-1 text-2xl font-bold text-center ml-16">Courtside Scores</h2>
                 </div>
                 <div className="grid grid-cols-2">
                     <div className="col-span-1">

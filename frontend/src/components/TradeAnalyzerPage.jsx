@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import {AbcSharp} from "@mui/icons-material";
 
 const TradeAnalyzer = ({ players }) => {
     const [tradingAway, setTradingAway] = useState([]);
@@ -64,8 +65,9 @@ const TradeAnalyzer = ({ players }) => {
                                 {tradingAway.map(player => (
                                     <div key={player.id} className="flex items-center text-white font-semibold justify-between mb-2">
                                         <div className="flex items-center">
-                                            <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="w-10 h-10 rounded-full mr-4" />
-                                            <span>{player.firstName} {player.lastName}</span>
+                                            <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="w-20 h-auto rounded-full" />
+                                            <span className="mr-8">{player.firstName} {player.lastName} </span>
+                                            <span>Courtside Score: {player.rankingScore.toFixed(2)}</span>
                                         </div>
                                         <button onClick={() => handleRemovePlayer(player.id, true)} className="text-red-500">Remove</button>
                                     </div>
@@ -87,8 +89,9 @@ const TradeAnalyzer = ({ players }) => {
                                 {receiving.map(player => (
                                     <div key={player.id} className="flex items-center text-white font-semibold justify-between mb-2">
                                         <div className="flex items-center">
-                                            <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="w-10 h-10 rounded-full mr-4" />
-                                            <span>{player.firstName} {player.lastName}</span>
+                                            <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="w-20 h-auto rounded-full"/>
+                                            <span className="mr-8">{player.firstName} {player.lastName}</span>
+                                            <span>Courtside Score: {player.rankingScore.toFixed(2)}</span>
                                         </div>
                                         <button onClick={() => handleRemovePlayer(player.id, false)} className="text-red-500">Remove</button>
                                     </div>

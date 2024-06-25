@@ -92,7 +92,7 @@ const PlayerList = ({ players, isLoading }) => {
                             <TableBody>
                                 {paginatedPlayers.map((player, index) => (
                                     <React.Fragment key={player.id}>
-                                        <TableRow onClick={() => handleRowClick(player.id)} style={{ cursor: 'pointer' }} hover>
+                                        <TableRow onClick={() => handleRowClick(player.id)} className="cursor-pointer transition-colors duration-100 hover:bg-neutral-600 hover:bg-opacity-20">
                                             {[
                                                 page * rowsPerPage + index + 1,
                                                 player.rankingScore.toFixed(2),
