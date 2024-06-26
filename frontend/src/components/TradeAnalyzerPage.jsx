@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import CompactPlayerDetail from './CompactPlayerDetail';
 
 const TradeAnalyzer = ({ players }) => {
     const [tradingAway, setTradingAway] = useState([]);
@@ -45,33 +46,30 @@ const TradeAnalyzer = ({ players }) => {
 
     return (
         <div className="bg-neutral-900 min-h-screen">
-            <nav className="bg-neutral-900 text-white p-4 sticky top-0">
+            <nav className="bg-neutral-900 text-white p-4 top-0">
                 <div className="container mx-auto flex justify-between items-center">
-                    <a href="#" className="text-xl font-bold">Courtside Fantasy</a>
+                    <a href="#" className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold">Courtside Fantasy</a>
                     <div>
-                        <Link to="/" className="mx-2 hover:text-gray-300">Home</Link>
-                        <Link to="/players" className="mx-2 hover:text-gray-300">Player Rankings</Link>
-                        <a href="#" className="mx-2 hover:text-gray-300">Login</a>
+                        <Link to="/" className="mx-2 font-bold hover:text-gray-300">Home</Link>
+                        <Link to="/players" className="mx-2 font-bold hover:text-gray-300">Player Rankings</Link>
+                        <a href="#" className="mx-2 font-bold hover:text-gray-300">Login</a>
                     </div>
                 </div>
             </nav>
             <header className="bg-neutral-900 text-white text-center py-12">
-                <h1 className="text-4xl font-bold">Trade Analyzer</h1>
-                <p className="mt-4">Evaluate your trades to make the best decisions for your fantasy basketball team.</p>
+                <h1 className="text-4xl text-orange-600 font-bold">Trade Analyzer</h1>
+                <p className="text-xl mt-4">Evaluate your trades to make the best decisions for your fantasy basketball team.</p>
             </header>
-            <main className="container mx-auto my-12 p-6 bg-neutral-900 rounded shadow-lg">
+            <main className="container mx-auto my-12 p-6 bg-neutral-900">
                 <section id="trade-input" className="mb-12">
-                    <h2 className="text-2xl text-white font-semibold mb-6">Enter Your Trade Details</h2>
+                    <h2 className="text-3xl text-white font-semibold mb-6">Enter Your Trade Details</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <h3 className="text-xl text-white font-semibold mb-2">Your Players</h3>
-                            <div className="bg-neutral-900 p-4 rounded">
+                            <h3 className="text-2xl text-white font-semibold mb-2">Players you're trading</h3>
+                            <div className="bg-neutral-900 p-4 rounded flex flex-wrap justify-start">
                                 {tradingAway.map(player => (
-                                    <div key={player.id} className="flex items-center text-white font-semibold justify-between mb-2">
-                                        <div className="flex items-center">
-                                            <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="w-10 h-10 rounded-full mr-4" />
-                                            <span>{player.firstName} {player.lastName}</span>
-                                        </div>
+                                    <div key={player.id} className="p-2" style={{ maxWidth: '350px' }}>
+                                        <CompactPlayerDetail player={player} />
                                         <button onClick={() => handleRemovePlayer(player.id, true)} className="text-red-500">Remove</button>
                                     </div>
                                 ))}
@@ -87,14 +85,11 @@ const TradeAnalyzer = ({ players }) => {
                             </div>
                         </div>
                         <div>
-                            <h3 className="text-xl text-white font-semibold mb-2">Receiving Players</h3>
-                            <div className="bg-neutral-900 p-4 rounded">
+                            <h3 className="text-2xl text-white font-semibold mb-2">Players you're getting</h3>
+                            <div className="bg-neutral-900 p-4 rounded flex flex-wrap justify-start">
                                 {receiving.map(player => (
-                                    <div key={player.id} className="flex items-center text-white font-semibold justify-between mb-2">
-                                        <div className="flex items-center">
-                                            <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="w-10 h-10 rounded-full mr-4" />
-                                            <span>{player.firstName} {player.lastName}</span>
-                                        </div>
+                                    <div key={player.id} className="p-2" style={{ maxWidth: '350px' }}>
+                                        <CompactPlayerDetail player={player} />
                                         <button onClick={() => handleRemovePlayer(player.id, false)} className="text-red-500">Remove</button>
                                     </div>
                                 ))}
@@ -104,7 +99,7 @@ const TradeAnalyzer = ({ players }) => {
                                 >
                                     <option value="">Select a player...</option>
                                     {availablePlayers.map(player => (
-                                        <option key={player.id} value={player.id}>{player.firstName} {player.lastName}</option>
+                                    <option key={player.id} value={player.id}>{player.firstName} {player.lastName}</option>
                                     ))}
                                 </select>
                             </div>
@@ -112,7 +107,7 @@ const TradeAnalyzer = ({ players }) => {
                     </div>
                     <button
                         onClick={analyzeTrade}
-                        className="mt-6 bg-orange-600 text-white py-2 px-4 rounded hover:bg-blue-800"
+                        className="mt-6 bg-orange-600 text-white py-2 px-4 rounded hover:bg-orange-800"
                     >
                         Analyze Trade
                     </button>
@@ -122,9 +117,9 @@ const TradeAnalyzer = ({ players }) => {
                         <h2 className="text-2xl text-white font-semibold mb-6">Trade Analysis</h2>
                         <div className="bg-neutral-900 text-white p-4 rounded">
                             <p className="text-lg font-bold">Difference in Ranking Scores: <span className="text-2xl">{tradeResult.scoreDifference.toFixed(2)}</span></p>
-                            {tradeResult.scoreDifference > 1.5 ? (
+                            {tradeResult.scoreDifference > 1.0 ? (
                                 <p className="text-green-500 font-bold mt-4">This trade improves your team!</p>
-                            ) : tradeResult.scoreDifference < -1.5 ? (
+                            ) : tradeResult.scoreDifference < -1.0 ? (
                                 <p className="text-red-500 font-bold mt-4">This trade may weaken your team.</p>
                             ) : (
                                 <p className="text-yellow-500 font-bold mt-4">This trade is fair. Consider the changes it makes to your team and if those are necessary.</p>
