@@ -71,14 +71,14 @@ const PlayerList = ({ players, isLoading }) => {
                     <nav>
                         <a href="#login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</a>
                         <Link to="/" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Home</Link>
-                        <Link to="/trade" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">TradeAnalyzer</Link>
+                        <Link to="/trade" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Trade Analyzer</Link>
                     </nav>
                 </div>
             </header>
             <main className="p-5 flex flex-col items-center">
                 <h2 className="text-5xl font-bold mb-10 bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text">Courtside Fantasy Rankings for 2023-24 Season</h2>
-                {isLoading ? (<CircularProgress color="inherit" />) : (
-                    <TableContainer component={Paper} style={{ backgroundColor: 'transparent', width: '95%' }}>
+                {isLoading ? (<CircularProgress color="inherit"/>) : (
+                    <TableContainer component={Paper} style={{backgroundColor: 'transparent', width: '95%'}}>
                         <Table>
                             <TableHead>
                                 <TableRow>
@@ -92,7 +92,8 @@ const PlayerList = ({ players, isLoading }) => {
                             <TableBody>
                                 {paginatedPlayers.map((player, index) => (
                                     <React.Fragment key={player.id}>
-                                        <TableRow onClick={() => handleRowClick(player.id)} className="cursor-pointer transition-colors duration-100 hover:bg-neutral-600 hover:bg-opacity-20">
+                                        <TableRow onClick={() => handleRowClick(player.id)}
+                                                  className="cursor-pointer transition-colors duration-100 hover:bg-neutral-600 hover:bg-opacity-20">
                                             {[
                                                 page * rowsPerPage + index + 1,
                                                 player.rankingScore.toFixed(2),
@@ -119,9 +120,9 @@ const PlayerList = ({ players, isLoading }) => {
                                             ))}
                                         </TableRow>
                                         <TableRow>
-                                            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={18}>
+                                            <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={18}>
                                                 <Collapse in={openRows[player.id]} timeout="auto" unmountOnExit>
-                                                    <PlayerDetail player={player} />
+                                                    <PlayerDetail player={player}/>
                                                 </Collapse>
                                             </TableCell>
                                         </TableRow>
@@ -146,6 +147,16 @@ const PlayerList = ({ players, isLoading }) => {
                     </TableContainer>
                 )}
             </main>
+            <footer className="bg-neutral-900 text-white text-center py-4">
+                <div className="container mx-auto">
+                    <p>&copy; 2024 Courtside Fantasy. All rights reserved.</p>
+                    <div className="mt-2">
+                        <a href="#" className="mx-2 hover:text-gray-300">Contact</a>
+                        <a href="#" className="mx-2 hover:text-gray-300">Privacy Policy</a>
+                        <a href="#" className="mx-2 hover:text-gray-300">Terms of Service</a>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import {AbcSharp} from "@mui/icons-material";
+//import {AbcSharp} from "@mui/icons-material";
 
 const TradeAnalyzer = ({ players }) => {
     const [tradingAway, setTradingAway] = useState([]);
@@ -46,16 +46,16 @@ const TradeAnalyzer = ({ players }) => {
 
     return (
         <div className="bg-neutral-900 min-h-screen">
-            <nav className="bg-neutral-900 text-white p-4 sticky top-0">
-                <div className="container mx-auto flex justify-between items-center">
-                    <a href="#" className="text-xl font-bold">Courtside Fantasy</a>
-                    <div>
-                        <Link to="/" className="mx-2 hover:text-gray-300">Home</Link>
-                        <Link to="/players" className="mx-2 hover:text-gray-300">Player Rankings</Link>
-                        <a href="#" className="mx-2 hover:text-gray-300">Login</a>
-                    </div>
+            <header className="h-24 bg-neutral-900">
+                <div className="container mx-auto flex justify-between items-center h-full">
+                    <h1 className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold">Courtside Fantasy</h1>
+                    <nav>
+                        <a href="#login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</a>
+                        <Link to="/" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Home</Link>
+                        <Link to="/players" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Player Rankings</Link>
+                    </nav>
                 </div>
-            </nav>
+            </header>
             <header className="bg-neutral-900 text-white text-center py-12">
                 <h1 className="text-4xl font-bold">Trade Analyzer</h1>
                 <p className="mt-4">Evaluate your trades to make the best decisions for your fantasy basketball team.</p>
@@ -68,9 +68,10 @@ const TradeAnalyzer = ({ players }) => {
                             <h3 className="text-xl text-white font-semibold mb-2">Your Players</h3>
                             <div className="bg-neutral-900 p-4 rounded">
                                 {tradingAway.map(player => (
-                                    <div key={player.id} className="flex items-center text-white font-semibold justify-between mb-2">
+                                    <div key={player.id}
+                                         className="flex items-center text-white font-semibold justify-between mb-2">
                                         <div className="flex items-center">
-                                            <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="w-20 h-auto rounded-full" />
+                                        <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="w-20 h-auto rounded-full" />
                                             <span className="mr-8">{player.firstName} {player.lastName} </span>
                                             <span>Courtside Score: {player.rankingScore.toFixed(2)}</span>
                                         </div>
