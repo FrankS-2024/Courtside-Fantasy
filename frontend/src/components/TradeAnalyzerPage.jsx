@@ -5,9 +5,14 @@ import CompactPlayerDetail from './CompactPlayerDetail';
 import SearchableDropdown from './SearchableDropdown';
 
 const TradeAnalyzer = ({ players }) => {
+    const statFilters = [
+        'PTS', 'REB', 'AST', 'STL', 'BLK', '3P', 'FG%', 'FT%', 'TO'
+    ];
+
     const [tradingAway, setTradingAway] = useState([]);
     const [receiving, setReceiving] = useState([]);
     const [tradeResult, setTradeResult] = useState(null);
+    const [selectedFilters, setSelectedFilters] = useState(statFilters);
 
     const handleSelectPlayer = (playerId, isTradingAway) => {
         const selectedPlayer = players.find(p => p.id === playerId);
@@ -28,11 +33,18 @@ const TradeAnalyzer = ({ players }) => {
         }
     };
 
+    const handleFilterToggle = (stat) => {
+        setSelectedFilters(prev =>
+            prev.includes(stat) ? prev.filter(s => s !== stat) : [...prev, stat]
+        );
+    };
+
     const analyzeTrade = async () => {
         try {
             const response = await axios.post('/api/analyze-trade', {
                 tradingAwayIds: tradingAway.map(player => player.id),
-                receivingIds: receiving.map(player => player.id)
+                receivingIds: receiving.map(player => player.id),
+                filters: selectedFilters
             });
             setTradeResult(response.data);
         } catch (error) {
@@ -40,7 +52,6 @@ const TradeAnalyzer = ({ players }) => {
         }
     };
 
-    // Filter out players already selected in tradingAway or receiving
     const availablePlayers = players.filter(
         player => !tradingAway.some(p => p.id === player.id) && !receiving.some(p => p.id === player.id)
     );
@@ -96,9 +107,23 @@ const TradeAnalyzer = ({ players }) => {
                             </div>
                         </div>
                     </div>
+                    <div className="mt-6 text-center">
+                        <h3 className="text-2xl text-white font-semibold mb-2">Select Stats to Consider</h3>
+                        <div className="flex flex-wrap justify-center gap-2">
+                            {statFilters.map(stat => (
+                                <button
+                                    key={stat}
+                                    onClick={() => handleFilterToggle(stat)}
+                                    className={`py-2 px-4 font-semibold rounded-xl ${selectedFilters.includes(stat) ? 'bg-black text-white' : 'bg-black text-white opacity-25'}`}
+                                >
+                                    {stat}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                     <button
                         onClick={analyzeTrade}
-                        className="mt-6 bg-orange-600 text-white py-2 px-4 rounded hover:bg-orange-800"
+                        className="mt-6 bg-orange-600 font-bold text-white py-2 px-4 rounded-xl hover:bg-orange-800"
                     >
                         Analyze Trade
                     </button>

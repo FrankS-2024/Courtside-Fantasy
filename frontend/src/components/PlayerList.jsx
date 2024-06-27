@@ -14,6 +14,7 @@ import {
     Collapse,
     Tooltip
 } from '@mui/material';
+import { FixedSizeList as List } from 'react-window';
 
 const PlayerList = ({ players, isLoading }) => {
     const [page, setPage] = useState(0);

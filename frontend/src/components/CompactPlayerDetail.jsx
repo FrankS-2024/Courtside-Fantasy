@@ -19,9 +19,9 @@ const CompactPlayerDetail = ({ player }) => {
     ];
 
     return (
-        <div className="flex flex-col items-center text-center text-white border-2 border-orange-600 rounded bg-neutral-800" style={{ width: '320px', maxHeight: '500px' }}>
+        <div className="flex flex-col items-center text-center border-2 border-orange-600 text-white rounded-xl bg-neutral-800" style={{ width: '320px', maxHeight: '500px' }}>
             <img src={player.playerImg} alt={`${player.firstName} ${player.lastName}`} className="p-2 w-80 h-auto"/>
-            <div className="overflow-auto w-full scrollbar-thin scrollbar-thumb-neutral-400 scrollbar-track-neutral-800" style={{ maxHeight: '175px', overflowY: 'auto' }}>
+            <div className="overflow-auto w-full scrollbar-thin scrollbar-thumb-neutral-400 scrollbar-track-transparent" style={{ maxHeight: '175px', overflowY: 'auto' }}>
                 <h3 className="text-lg font-bold truncate">{player.firstName} {player.lastName}</h3>
                 <span className="">{player.teamAbbreviation} - {player.position}</span>
                 <div className="flex flex-col pb-2 pl-3 pr-2">
