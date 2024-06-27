@@ -15,7 +15,7 @@ const LandingPage = () => {
                     {/* Header */}
                     <header className="h-24">
                         <div className="container mx-auto flex justify-between items-center h-full">
-                            <h1 className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold">Courtside Fantasy</h1>
+                            <h1 className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold leading-tight">Courtside Fantasy</h1>
                             <nav>
                                 <a href="#features" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">Features</a>
                                 <a href="#about" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">About</a>

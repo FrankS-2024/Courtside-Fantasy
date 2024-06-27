@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import CompactPlayerDetail from './CompactPlayerDetail';
+import SearchableDropdown from './SearchableDropdown';
 
 const TradeAnalyzer = ({ players }) => {
     const [tradingAway, setTradingAway] = useState([]);
@@ -9,7 +10,7 @@ const TradeAnalyzer = ({ players }) => {
     const [tradeResult, setTradeResult] = useState(null);
 
     const handleSelectPlayer = (playerId, isTradingAway) => {
-        const selectedPlayer = players.find(p => p.id === parseInt(playerId));
+        const selectedPlayer = players.find(p => p.id === playerId);
         if (selectedPlayer) {
             if (isTradingAway) {
                 setTradingAway(prev => [...prev, selectedPlayer]);
@@ -46,16 +47,14 @@ const TradeAnalyzer = ({ players }) => {
 
     return (
         <div className="bg-neutral-900 min-h-screen">
-            <nav className="bg-neutral-900 text-white p-4 top-0">
-                <div className="container mx-auto flex justify-between items-center">
-                    <a href="#" className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold">Courtside Fantasy</a>
-                    <div>
-                        <Link to="/" className="mx-2 font-bold hover:text-gray-300">Home</Link>
-                        <Link to="/players" className="mx-2 font-bold hover:text-gray-300">Player Rankings</Link>
-                        <a href="#" className="mx-2 font-bold hover:text-gray-300">Login</a>
-                    </div>
-                </div>
-            </header>
+            <div className="container mx-auto flex justify-between items-center h-24">
+                <a href="#" className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold leading-tight">Courtside Fantasy</a>
+                <nav>
+                    <a href="#login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</a>
+                    <Link to="/" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Home</Link>
+                    <Link to="/players" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Player Rankings</Link>
+                </nav>
+            </div>
             <header className="bg-neutral-900 text-white text-center py-12">
                 <h1 className="text-4xl text-orange-600 font-bold">Trade Analyzer</h1>
                 <p className="text-xl mt-4">Evaluate your trades to make the best decisions for your fantasy basketball team.</p>
@@ -68,40 +67,32 @@ const TradeAnalyzer = ({ players }) => {
                             <h3 className="text-2xl text-white font-semibold mb-2">Players you're trading</h3>
                             <div className="bg-neutral-900 p-4 rounded flex flex-wrap justify-start">
                                 {tradingAway.map(player => (
-                                    <div key={player.id} className="p-2" style={{ maxWidth: '350px' }}>
+                                    <div key={player.id} className="p-3 pt-0" style={{ maxWidth: '350px' }}>
                                         <CompactPlayerDetail player={player} />
                                         <button onClick={() => handleRemovePlayer(player.id, true)} className="text-red-500">Remove</button>
                                     </div>
                                 ))}
-                                <select
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                    onChange={(e) => handleSelectPlayer(e.target.value, true)}
-                                >
-                                    <option value="">Select a player...</option>
-                                    {availablePlayers.map(player => (
-                                        <option key={player.id} value={player.id}>{player.firstName} {player.lastName}</option>
-                                    ))}
-                                </select>
+                                <SearchableDropdown
+                                    players={availablePlayers}
+                                    onSelect={(playerId) => handleSelectPlayer(playerId, true)}
+                                    placeholder="Select a player..."
+                                />
                             </div>
                         </div>
                         <div>
                             <h3 className="text-2xl text-white font-semibold mb-2">Players you're getting</h3>
                             <div className="bg-neutral-900 p-4 rounded flex flex-wrap justify-start">
                                 {receiving.map(player => (
-                                    <div key={player.id} className="p-2" style={{ maxWidth: '350px' }}>
+                                    <div key={player.id} className="p-3 pt-0" style={{ maxWidth: '350px' }}>
                                         <CompactPlayerDetail player={player} />
                                         <button onClick={() => handleRemovePlayer(player.id, false)} className="text-red-500">Remove</button>
                                     </div>
                                 ))}
-                                <select
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                    onChange={(e) => handleSelectPlayer(e.target.value, false)}
-                                >
-                                    <option value="">Select a player...</option>
-                                    {availablePlayers.map(player => (
-                                    <option key={player.id} value={player.id}>{player.firstName} {player.lastName}</option>
-                                    ))}
-                                </select>
+                                <SearchableDropdown
+                                    players={availablePlayers}
+                                    onSelect={(playerId) => handleSelectPlayer(playerId, false)}
+                                    placeholder="Select a player..."
+                                />
                             </div>
                         </div>
                     </div>
