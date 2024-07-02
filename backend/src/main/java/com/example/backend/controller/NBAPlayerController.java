@@ -38,7 +38,7 @@ public class NBAPlayerController {
 
     @PostMapping("/analyze-trade")
     public ResponseEntity<Map<String, Double>> analyzeTrade(@RequestBody TradeRequest tradeRequest) {
-        Map<String, Double> analysisResult = playerService.analyzeTrade(tradeRequest.getTradingAwayIds(), tradeRequest.getReceivingIds());
+        Map<String, Double> analysisResult = playerService.analyzeTrade(tradeRequest.getTradingAwayIds(), tradeRequest.getReceivingIds(), tradeRequest.getFilters());
         return ResponseEntity.ok(analysisResult);
     }
 
@@ -46,6 +46,7 @@ public class NBAPlayerController {
     public static class TradeRequest {
         private List<Long> tradingAwayIds;
         private List<Long> receivingIds;
+        private List<String> filters;
 
         public List<Long> getTradingAwayIds() {
             return tradingAwayIds;
@@ -61,6 +62,14 @@ public class NBAPlayerController {
 
         public void setReceivingIds(List<Long> receivingIds) {
             this.receivingIds = receivingIds;
+        }
+
+        public List<String> getFilters() {
+            return filters;
+        }
+
+        public void setFilters(List<String> filters) {
+            this.filters = filters;
         }
     }
 }

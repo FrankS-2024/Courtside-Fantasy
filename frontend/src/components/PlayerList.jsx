@@ -64,6 +64,14 @@ const PlayerList = ({ players, isLoading }) => {
         'Free Throw Attempts', 'Turnovers'
     ];
 
+    const getStatColor = (zScore) => {
+        const color = zScore > 0 ? '0, 255, 0' : '255, 0, 0';
+        const maxOpacity = 1;
+        const minOpacity = 0;
+        const opacity = Math.min(Math.max(minOpacity, Math.abs(zScore) / 3), maxOpacity);
+        return `rgba(${color}, ${opacity})`;
+    };
+
     return (
         <div className="min-h-screen bg-neutral-900 text-white">
             <header className="h-24">
@@ -114,11 +122,48 @@ const PlayerList = ({ players, isLoading }) => {
                                                 formatPercentage(player.freeThrowPercentage),
                                                 player.freeThrowsAttempted.toFixed(1),
                                                 player.turnoversPerGame.toFixed(1)
-                                            ].map((cell, cellIndex) => (
-                                                <Tooltip key={cellIndex} title={headers[cellIndex]} arrow>
-                                                    <TableCell style={tableCellStyle}>{cell}</TableCell>
-                                                </Tooltip>
-                                            ))}
+                                            ].map((cell, cellIndex) => {
+                                                let zScore;
+                                                switch (cellIndex) {
+                                                    case 7: // Points
+                                                        zScore = player.pointV;
+                                                        break;
+                                                    case 8: // Threes
+                                                        zScore = player.threePointsMadeV;
+                                                        break;
+                                                    case 9: // Rebounds
+                                                        zScore = player.reboundV;
+                                                        break;
+                                                    case 10: // Assists
+                                                        zScore = player.assistV;
+                                                        break;
+                                                    case 11: // Steals
+                                                        zScore = player.stealV;
+                                                        break;
+                                                    case 12: // Blocks
+                                                        zScore = player.blockV;
+                                                        break;
+                                                    case 13: // Field Goal %
+                                                        zScore = player.fieldGoalV;
+                                                        break;
+                                                    case 15: // Free Throw %
+                                                        zScore = player.freeThrowV;
+                                                        break;
+                                                    case 17: // Turnovers
+                                                        zScore = player.turnoverV;
+                                                        break;
+                                                    default:
+                                                        zScore = null;
+                                                        break;
+                                                }
+                                                return (
+                                                    <Tooltip key={cellIndex} title={headers[cellIndex]} arrow>
+                                                        <TableCell style={{...tableCellStyle, backgroundColor: zScore !== null ? getStatColor(zScore) : 'transparent'}}>
+                                                            {cell}
+                                                        </TableCell>
+                                                    </Tooltip>
+                                                );
+                                            })}
                                         </TableRow>
                                         <TableRow>
                                             <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={18}>
