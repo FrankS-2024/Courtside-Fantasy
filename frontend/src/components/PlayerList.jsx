@@ -129,7 +129,7 @@ const PlayerList = ({ players, isLoading }) => {
                                                         zScore = player.pointV;
                                                         break;
                                                     case 8: // Threes
-                                                        zScore = player.threePointsMadeV;
+                                                        zScore = player.threepointsMadeV;
                                                         break;
                                                     case 9: // Rebounds
                                                         zScore = player.reboundV;
