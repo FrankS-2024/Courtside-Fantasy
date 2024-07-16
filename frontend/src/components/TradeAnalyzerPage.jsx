@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import CompactPlayerDetail from './CompactPlayerDetail';
 import SearchableDropdown from './SearchableDropdown';
+import StatDifferenceChart from './StatDifferenceChart';
 
 const TradeAnalyzer = ({ players }) => {
     const statFilters = [
@@ -55,6 +56,14 @@ const TradeAnalyzer = ({ players }) => {
     const availablePlayers = players.filter(
         player => !tradingAway.some(p => p.id === player.id) && !receiving.some(p => p.id === player.id)
     );
+
+    const getTradeGrade = (scoreDifference) => {
+        if (scoreDifference > 2) return { grade: 'A', color: 'text-green-500' };
+        if (scoreDifference > 1) return { grade: 'B', color: 'text-green-400' };
+        if (scoreDifference > -0.5) return { grade: 'C', color: 'text-yellow-500' };
+        if (scoreDifference > -2) return { grade: 'D', color: 'text-orange-500' };
+        return { grade: 'F', color: 'text-red-500' };
+    };
 
     return (
         <div className="bg-neutral-900 min-h-screen">
@@ -114,7 +123,7 @@ const TradeAnalyzer = ({ players }) => {
                                 <button
                                     key={stat}
                                     onClick={() => handleFilterToggle(stat)}
-                                    className={`py-2 px-4 font-semibold rounded-xl ${selectedFilters.includes(stat) ? 'bg-black text-white' : 'bg-black text-white opacity-25'}`}
+                                    className={`py-2 px-4 font-semibold rounded-xl ${selectedFilters.includes(stat) ? 'bg-orange-600 text-white' : 'bg-gray-500 text-white'}`}
                                 >
                                     {stat}
                                 </button>
@@ -129,25 +138,15 @@ const TradeAnalyzer = ({ players }) => {
                     </button>
                 </section>
                 {tradeResult !== null && (
-                    <section id="trade-analysis">
-                        <h2 className="text-2xl text-white font-semibold mb-6">Trade Analysis</h2>
-                        <div className="bg-neutral-900 text-white p-4 rounded">
-                            <p className="text-lg font-bold">Difference in Ranking Scores: <span className="text-2xl">{tradeResult.scoreDifference.toFixed(2)}</span></p>
-                            {tradeResult.scoreDifference > 1.0 ? (
-                                <p className="text-green-500 font-bold mt-4">This trade improves your team!</p>
-                            ) : tradeResult.scoreDifference < -1.0 ? (
-                                <p className="text-red-500 font-bold mt-4">This trade may weaken your team.</p>
-                            ) : (
-                                <p className="text-yellow-500 font-bold mt-4">This trade is fair. Consider the changes it makes to your team and if those are necessary.</p>
-                            )}
-                            <hr className="my-4"/>
-                            {Object.entries(tradeResult).map(([key, value]) => (
-                                key !== "scoreDifference" && (
-                                    <p key={key}>
-                                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}: <span className="font-bold">{value.toFixed(2)}</span>
-                                    </p>
-                                )
-                            ))}
+                    <section id="trade-analysis" className="p-6 bg-neutral-800 rounded-xl mt-12">
+                        <h2 className="text-4xl text-white font-bold mb-6">Trade Analysis</h2>
+                        <div className="bg-neutral-900 text-white p-6 rounded-lg shadow-lg">
+                            <p className="text-2xl font-bold">Difference in Ranking Scores: <span className="text-3xl">{tradeResult.scoreDifference.toFixed(2)}</span></p>
+                            <div className={`text-5xl font-extrabold mt-4 ${getTradeGrade(tradeResult.scoreDifference).color}`}>
+                                {getTradeGrade(tradeResult.scoreDifference).grade}
+                            </div>
+                            <hr className="my-4 border-t-2 border-gray-600"/>
+                            <StatDifferenceChart data={tradeResult} />
                         </div>
                     </section>
                 )}
@@ -167,3 +166,4 @@ const TradeAnalyzer = ({ players }) => {
 };
 
 export default TradeAnalyzer;
+
