@@ -7,12 +7,13 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
+@EntityScan(basePackages = "com.example.backend.model")
+@EnableJpaRepositories(basePackages = "com.example.backend.repository")
 @ComponentScan(basePackages = {
 		"com.example.backend.controller",
-		"com.example.backend.service"
+		"com.example.backend.service",
+		"com.example.backend.security"
 })
-@EnableJpaRepositories(basePackages = "com.example.backend.repository")
-@EntityScan(basePackages = "com.example.backend.model")
 public class BackendApplication {
 
 	public static void main(String[] args) {

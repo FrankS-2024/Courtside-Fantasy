@@ -70,7 +70,7 @@ const TradeAnalyzer = ({ players }) => {
             <div className="container mx-auto flex justify-between items-center h-24">
                 <a href="#" className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold leading-tight">Courtside Fantasy</a>
                 <nav>
-                    <a href="#login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</a>
+                    <Link to="/login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</Link>
                     <Link to="/" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Home</Link>
                     <Link to="/players" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Player Rankings</Link>
                 </nav>
@@ -100,7 +100,7 @@ const TradeAnalyzer = ({ players }) => {
                             </div>
                         </div>
                         <div>
-                            <h3 className="text-2xl text-white font-semibold mb-2">Players you're getting</h3>
+                            <h3 className="text-2xl text-white font-semibold mb-2">Players you're receiving</h3>
                             <div className="bg-neutral-900 p-4 rounded flex flex-wrap justify-start">
                                 {receiving.map(player => (
                                     <div key={player.id} className="p-3 pt-0" style={{ maxWidth: '350px' }}>

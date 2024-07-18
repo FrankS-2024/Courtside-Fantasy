@@ -42,6 +42,14 @@ const PlayerList = ({ players, isLoading }) => {
         setOpenRows({});
     };
 
+    const getStatColor = (zScore) => {
+        const color = zScore > 0 ? '0, 200, 0' : '200, 0, 0';
+        const maxOpacity = 1;
+        const minOpacity = 0;
+        const opacity = Math.min(Math.max(minOpacity, Math.abs(zScore) / 4), maxOpacity);
+        return `rgba(${color}, ${opacity})`;
+    };
+
     const paginatedPlayers = players.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const tableCellStyle = {
@@ -64,21 +72,13 @@ const PlayerList = ({ players, isLoading }) => {
         'Free Throw Attempts', 'Turnovers'
     ];
 
-    const getStatColor = (zScore) => {
-        const color = zScore > 0 ? '0, 255, 0' : '255, 0, 0';
-        const maxOpacity = 1;
-        const minOpacity = 0;
-        const opacity = Math.min(Math.max(minOpacity, Math.abs(zScore) / 3), maxOpacity);
-        return `rgba(${color}, ${opacity})`;
-    };
-
     return (
         <div className="min-h-screen bg-neutral-900 text-white">
             <header className="h-24">
                 <div className="container mx-auto flex justify-between items-center h-full">
                     <h1 className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold leading-tight">Courtside Fantasy</h1>
                     <nav>
-                        <a href="#login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</a>
+                        <Link to="/login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</Link>
                         <Link to="/" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Home</Link>
                         <Link to="/trade" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Trade Analyzer</Link>
                     </nav>

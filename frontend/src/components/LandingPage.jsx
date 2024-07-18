@@ -20,7 +20,7 @@ const LandingPage = () => {
                                 <a href="#features" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">Features</a>
                                 <a href="#about" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">About</a>
                                 <a href="#contact" className="ml-4 text-lg text-white font-bold hover:text-gray-300 transition-colors duration-300">Contact</a>
-                                <a href="#login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</a>
+                                <Link to="/login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</Link>
                                 <Link to="/players" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Player Rankings</Link>
                             </nav>
                         </div>
