@@ -1,13 +1,11 @@
 package com.example.backend.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
-//@Table(name = "users")
 public class User {
 
     @Id
@@ -16,6 +14,9 @@ public class User {
     private String username;
     private String email;
     private String password;
+
+    // Default constructor
+    public User() {}
 
     public Long getId() {
         return id;
