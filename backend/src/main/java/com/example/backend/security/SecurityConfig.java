@@ -30,8 +30,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disabling CSRF for simplicity, enable it for production
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/login", "/register").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // Permit all requests for now
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
