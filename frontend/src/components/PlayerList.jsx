@@ -15,11 +15,15 @@ import {
     Tooltip
 } from '@mui/material';
 import { FixedSizeList as List } from 'react-window';
+import { useAuth } from './AuthContext';
+
 
 const PlayerList = ({ players, isLoading }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [openRows, setOpenRows] = useState({});
+
+    const { currentUser, logout } = useAuth();
 
     const formatPercentage = (value) => {
         return (value * 100).toFixed(1) + '%';
@@ -78,7 +82,18 @@ const PlayerList = ({ players, isLoading }) => {
                 <div className="container mx-auto flex justify-between items-center h-full">
                     <h1 className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold leading-tight">Courtside Fantasy</h1>
                     <nav>
-                        <Link to="/login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</Link>
+                        {currentUser ? (
+                            <button
+                                onClick={logout}
+                                className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105"
+                            >
+                                Logout
+                            </button>
+                        ) : (
+                            <Link to="/login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">
+                                Login
+                            </Link>
+                        )}
                         <Link to="/" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Home</Link>
                         <Link to="/trade" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Trade Analyzer</Link>
                     </nav>

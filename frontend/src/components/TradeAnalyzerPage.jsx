@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from './axios';
 import { Link } from 'react-router-dom';
 import CompactPlayerDetail from './CompactPlayerDetail';
 import SearchableDropdown from './SearchableDropdown';
 import StatDifferenceChart from './StatDifferenceChart';
+import { useAuth } from './AuthContext';
 
 const TradeAnalyzer = ({ players }) => {
     const statFilters = [
         'PTS', 'REB', 'AST', 'STL', 'BLK', '3P', 'FG%', 'FT%', 'TO'
     ];
+
+    const { currentUser, logout } = useAuth();
 
     const [tradingAway, setTradingAway] = useState([]);
     const [receiving, setReceiving] = useState([]);
@@ -70,7 +73,18 @@ const TradeAnalyzer = ({ players }) => {
             <div className="container mx-auto flex justify-between items-center h-24">
                 <a href="#" className="text-3xl bg-gradient-to-r from-orange-500 to-orange-800 text-transparent bg-clip-text font-bold leading-tight">Courtside Fantasy</a>
                 <nav>
-                    <Link to="/login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Login</Link>
+                    {currentUser ? (
+                        <button
+                            onClick={logout}
+                            className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105"
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <Link to="/login" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">
+                            Login
+                        </Link>
+                    )}
                     <Link to="/" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Home</Link>
                     <Link to="/players" className="ml-4 bg-orange-600 hover:bg-orange-900 text-white font-bold py-2 px-4 rounded-full transition-transform duration-300 transform hover:scale-105">Player Rankings</Link>
                 </nav>

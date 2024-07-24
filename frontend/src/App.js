@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import axios from 'axios';
+import { Route, Routes } from 'react-router-dom';
+import axios from './components/axios';
 import PlayerList from './components/PlayerList';
 import LandingPage from './components/LandingPage';
 import TradeAnalyzer from './components/TradeAnalyzerPage';
 import Login from './components/Login';
+import { AuthProvider } from './components/AuthContext';
 
 function App() {
     const [players, setPlayers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
         // First, call the rank-players API to ensure the rankings are calculated
@@ -37,16 +37,16 @@ function App() {
     }, []);
 
     return (
-        <Router>
+        <AuthProvider>
             <div className="App">
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/players" element={<PlayerList players={players} isLoading={isLoading} />} />
                     <Route path="/trade" element={<TradeAnalyzer players={players} />} />
-                    <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
+                    <Route path="/login" element={<Login />} />
                 </Routes>
             </div>
-        </Router>
+        </AuthProvider>
     );
 }
 

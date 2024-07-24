@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import axios from './axios';
+import { useAuth } from './AuthContext'; // Make sure the path is correct
 
-function Login({ setCurrentUser }) {
+function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [isLogin, setIsLogin] = useState(true);
+    const { currentUser, login, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -16,7 +18,7 @@ function Login({ setCurrentUser }) {
             // Login
             try {
                 const response = await axios.post('/api/auth/login', { email, password });
-                setCurrentUser(response.data);
+                login(response.data); // Use the login function from useAuth
                 navigate('/');
             } catch (error) {
                 console.error('Login error', error);
@@ -27,7 +29,7 @@ function Login({ setCurrentUser }) {
                 await axios.post('/api/auth/register', { email, username, password });
                 // Automatically log in after registration
                 const response = await axios.post('/api/auth/login', { email, password });
-                setCurrentUser(response.data);
+                login(response.data); // Use the login function from useAuth
                 navigate('/');
             } catch (error) {
                 console.error('Registration error', error);
@@ -102,6 +104,17 @@ function Login({ setCurrentUser }) {
                         {isLogin ? "Don't have an account? Register" : 'Already have an account? Login'}
                     </button>
                 </div>
+                {currentUser && (
+                    <div className="mt-4 text-center">
+                        <button
+                            type="button"
+                            onClick={logout}
+                            className="text-orange-600 hover:underline"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
