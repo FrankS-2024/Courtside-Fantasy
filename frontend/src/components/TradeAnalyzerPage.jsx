@@ -180,4 +180,3 @@ const TradeAnalyzer = ({ players }) => {
 };
 
 export default TradeAnalyzer;
-

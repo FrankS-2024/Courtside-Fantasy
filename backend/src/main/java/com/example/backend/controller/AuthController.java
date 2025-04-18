@@ -47,4 +47,3 @@ public class AuthController {
         return ResponseEntity.ok("Logout successful");
     }
 }
-
